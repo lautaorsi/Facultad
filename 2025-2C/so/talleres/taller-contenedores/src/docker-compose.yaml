@@ -1,0 +1,16 @@
+version: "3.8"
+
+services:
+  external:
+    image: external
+    ports:
+      - 8080:8080
+    depends_on:
+        - local
+
+  local:
+    image: local
+    ports:
+      - 8000:8000
+
+

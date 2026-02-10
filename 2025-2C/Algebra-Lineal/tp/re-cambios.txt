@@ -1,0 +1,92 @@
+# Grupo tn-HouseOfVectors
+
+
+SOLUCIONADO - IMPORTANTE: Su función norma (linea 290) no funciona para p en general, sólo para 3 casos. Generalicenla para todos los p como se indica en el labo03. 
+
+Para la función norma propuse distinguir simplemente si era norma 1 (sumatoria de absolutos) y norma infinito (el maximo absoluto)
+Tambien me di cuenta que estabamos haciendo la norma infinito matricial, pero tenia que ser la vectorial.
+Para la norma generica "p" es simplemente la p-raiz de la sumatoria de elevar a la p cada absoluto del i-esimo elemento
+
+
+SOLUCIONADO - IMPORTANTE: Su función normaExacta aplica la norma vectorial a las matrices, lo que es errado. Revisen y corrijan para adecuar a lo que se pide en el labo03.
+
+Modificamos la función utilizada a la matricial, no me queda muy claro si p tenia que ser una lista o no ya que si bien el labo pedia que p fuera una lista y la funcion retornara la lista 
+a la hora de hacer los tests no se pasa p como lista ni se handlea el resultado como una lista, entonces lo deje como valores "singulares" 
+
+
+SOLUCIONADO - IMPORTANTE: Su función calculaLU no cuenta correctamente la cantidad de operaciones, ya que las hace de forma vectorizada. La idea es que hagan la eliminación gaussiana recorriendo los índices uno a uno (es un triple for) y cuenten las operaciones que realizan en cada paso. Además, el resultado debe guardarse (durante las iteraciones) en una misma matriz, de la cual se toma al final la triangular inferior (elementos de L) y superior (elementos de U). ¡Revisen el labo03!
+
+Arreglé el algoritmo para que trabaje con un triple loop usando la optimizacion de espacio como pedia el labo, puse chequeos tanto al principio para asegurar que pueda hacerse la descomposicion como entre operaciones, por si se anula alguna diagonal
+
+
+SOLUCIONADO - IMPORTANTE: Las funciones del módulo no deben utilizar funciones de numpy como np.dot a menos que sea estrictamente necesario (para correr el TP, no para los labos). Revisen TODAS las funciones, y asegurense de usar sus implementaciones en vez de las de numpy donde corresponda. 
+
+Sacamos todas las funciones de numpy y las reemplazamos por las propias
+
+
+SOLUCIONADO - IMPORTANTE: La implementación de metpot2k que tienen en el módulo no es la que se dió en el labo. Rehaganla siguien las indicaciones del Labo correspondiente.
+
+Modiifcamos la implementacion para que siga el algoritmo del laboratorio, agregué tambien una funcion auxiliar para la ampliación de la matriz (es posible que hubiera una forma mas algoritmica de hacerlo, pero no se me ocurrió)
+
+IMPORTANTE: Estandaricen las funciones que usan para cada cosa: tienen np.dot, dot, multiplica matrices y quizá otras más. Deberían tener únicamente una funcion que haga el producto.
+
+Saqué todas las funciones redundantes, formalicé la forma de resolver las multiplicaciones entre vectores para handlear los casos columna x fila (matriz) y fila x columna (escalra) usando la función multiplicar_vectores (linea 188)
+
+SOLUCIONADO - IMPORTANTE: En diagRH, no tiene sentido que simetricen la matriz primero y después revisen si es simétrica. El checkeo debería ir primero. Además:
+
+SOLUCIONADO - Línea 649, me parece que están construyendo mal el vector v, ya que debiera ser v = e1-v1, y ustedes usan la función utilizada para householder, donde queda v = ||v1|| (e1 - v1)
+
+Arreglado con la nueva implementación de diagRH siguiendo el algoritmo del laboratorio, se ahorran muchos pasos.
+
+SOLUCIONADO - Linea 669, ¿revisaron que en efecto sean iguales el lamb1 que obtienen de B y el que obtienen de metpot2k?
+
+Se soluciona colocando directamente el lambda obtenido de llamar a metpot2k en B en vez de construir la B y verificar que sea igual al del metodo
+
+SOLUCIONADO - IMPORTANTE + PREGUNTAS: diagRH:
+
+Linea 757 ¿para qué calculan los autovectores?
+
+Lineas 764 y 767 ¿por qué recortan autovalores, y los ordenan? metpot2k ya los devuelve ordenados, y deberían ser todos positivos hasta llegar a los que son esencialmente 0 (recortados por tolerancia).
+
+Charlado en la defensa, el nuevo algoritmo es mas sencillo y evita hacer operaciones del estilo
+
+SOLUCIONADO - Hay muchas más operaciones de las necesarias en esta función, me da la impresión de que tiene una “repasada” de GPT al  menos. Por favor, revisen emprolijen y entreguen algo hecho por ustedes.
+
+
+# Funciones TP
+
+
+SOLUCIONADO - PREGUNTA: En línea 116, ¿Por qué invierten S[0] en vez de S?
+
+Fue un error en el entendimiento de la nueva matriz Sigma ampliada (a la hora de hacer la traspuesta se tomó el [0] como toda la matriz sigma, pero a nivel codigo no funciona logicamente),
+lo solucionamos haciendolo más explícitamente, además extendemos la matriz directamente usando la función np.zeros y las dimensiones de Sigma
+
+SOLUCIONADO - IMPORTANTE + PREGUNTA: El algoritmo que aplican en Householder no pareciera coincidir con el que se indica en el TP. Deberían encontrar V primero resolviendo R V^T = Q^T, y luego calcular W = YV. Ustedes están primero calculando V= YQ, y luego resuelven W = R^T V^T. Expliquen el cambio que proponen en el notebook al final del TP. Viendo el notebook, creo que se están confundiendo al hacer QR, y lo están aplicando a X en vez de a X^T.
+
+Arreglado! Seguimos mas al pie de la letra el algoritmo dado en la consigna, usando una leve modificación (trasponiendo ambos lados de la ecuacion a la hora de despejar V) para poder reutilizar codigo 
+y replicamos la solucion en GS, dado que la diferencia se basa en la construccion de la descomposicion.  
+
+
+SOLUCIONADO - PREGUNTA: ¿Por qué ponen que Q tiene 200 (y no 2000) filas en línea 171?
+
+Charlado en la defensa, fue por temas de testing en los que corrimos datasets mas chicos para poder hacer los chequeos mas rapido
+
+# Análisis TP, síntesis
+
+
+IMPORTANTE: Se pide explicitamente en el TP que presenten tablas con las matrices de confusión. Entiendo que con el trabajo que hicieron pueden calcular las mismas, pero estas están ausentes en la presentación. También se habla de métricas como precision o recall, pero los valores no se reportaron. Incorporen esto en la versión revisada.
+
+
+
+IMPORTANTE: Está muy bien el análisis y discusión que presentan. Me intriga la gran diferencia que encuentran entre los distintos métodos. Todos deberían devolver el mismo resultado ya que la pseudo inversa que obtienen debería ser la misma. Les pido que agreguen las siguientes exploraciones para la versión revisada del TP:
+
+
+
+
+Corran SVD con un dataset menor en el cuál si logren que converja (por ejemplo, 100 fotos de perros y 100 de gatos). Comparen el resultado obtenido con aplicar el método de su predilección (por ejemplo, Ecuaciones Normales que es el que eligieron como mejor). Agreguen a las conclusiones que observan en ese caso.
+
+
+
+
+Para las matrices W que obtuvieron en cada caso (incluyan en esto los nuevos cálculos con SVD y el método que eligen), comparen con el W que obtendrían si usasen la función de numpy.linalg.pinv. Por ejemplo, calculen la norma frobenius de W-W_numpy. ¿Qué método devuelve el W más cercano al de numpy?
+
