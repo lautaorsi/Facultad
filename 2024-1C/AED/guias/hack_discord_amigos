@@ -1,0 +1,305 @@
+4)
+    class matriz{
+        
+        int filas = 0
+        int columnas = 0
+
+
+        crear(Cantfilas,Cantcolumnas){
+            filas = Cantfilas
+            columnas = Cantcolumnas 
+            this.matriz = T[Cantfilas]
+            for fila : matriz{
+                fila = T[Cantcolumnas]
+            }
+        }
+
+
+        Definir(fila,columna, valor){
+            if(fila >= filas || columna >= columnas){
+                return false
+            }
+            else{
+                matriz[fila][columna] = valor 
+            }
+        }
+    }
+    
+
+5)
+    class DiccionarioConHistoria{
+        
+
+        class objeto{
+            int cantidad = 0
+            T valor
+            T key
+
+            new objeto(llave, valor){
+                valor = valor
+                key = llave
+            }
+        }
+
+
+
+
+
+
+        ListaEnlazada lista 
+
+        nuevoDiccionario{
+            lista = null
+        }
+
+        esta(elem){
+            actual = lista.primero
+            while(actual != null){
+                if(actual.objeto.key == elem){
+                    return true
+                }
+                else{
+                    actual = actual.siguiente
+                }
+            }
+        }
+
+        definir(llave, valor){ 
+            actualData = lista.primero
+            while(actual.siguiente != null){
+                actual = actual.siguiente
+            }
+            if(esta(elem)){
+                actual.siguiente.objeto.key = llave
+                actual.siguiente.objeto.valor = valor
+                actual.objeto.cant += 1   
+            }
+            else{
+                actual.siguiente.objeto = new objeto(llave, valor)
+            }
+
+        }
+
+        obtener(llave){
+            actualData = lista.primero
+            while(actual != null){
+                if(actual.objeto.key == llave){
+                    return actual.objeto.valor    
+                }
+            }
+        }
+
+        borrar(llave){
+            actualData = lista.primero
+            if(actual.llave != llave){
+                while(actual.siguiente != llave){
+                    actual = actual.siguiente
+                }  
+            }
+            actual.siguiente = actual.siguiente.siguiente
+        }
+
+        cantSignificados(){
+            actualData = lista.primero
+            while(actual != null){
+                if(actual.objeto.key == llave){
+                    return actual.objeto.cantidad    
+                }
+            }
+        }
+    }
+
+7)
+    1.  cantidad de nodos corresponde a cantidad de elementos
+        nivel mas alto es el de mayor prioridad
+    3.
+        esHeap(arr){
+            res = true
+            c = 0
+            longitud = arr.length / 2 -2 
+            while( c <= longitud ){
+                if(arr[c] > arr[2c + 1] || arr[c] > arr[2c+2]){
+                    return false
+                }
+                c += 1
+            }
+            return true
+        }
+        
+
+13)
+    buscar(elem){
+        if(elem.length == 1 && raiz.valor == elem){
+            return raiz.significado
+        }
+        if(elem.length == 1 && raiz.usado == false){
+            return false
+        }
+        else{
+            return raiz[elem[0]].buscar(elem-elem[0])
+        }
+    }
+
+    agregar(elem, valor){
+        actual = raiz
+        (for letra in elem){
+            actual.usado = true
+            actual = actual[letra]
+            if(elem[elem.length - 1] == letra){
+                actual.significado = valor 
+            }
+        }
+    }
+
+14)
+    primeraPalabra(){
+        for(letra in raiz.seq){
+            if (letra.valida == true){
+                return letra + letra.primeraPalabra()
+            }
+        }
+        return ""
+    }
+
+    ultimaPalabra(){
+        c = 255
+        while(c >= 0){
+            if(raiz.seq[c].valida == true){
+                return seq[c] + seq[c].letra.ultimaPalabra()
+            }
+        }
+        return ""
+    }
+
+    palabrasConPrefijo(prefijo){
+        actual = raiz
+        palabras = []
+        for(letra in prefijo){
+            actual = actual.seq[letra]  //llegamos a la ult letra
+        }
+
+        if(letra.significado != null){
+            palabras.concatenar(prefijo) //si esa ult letra tiene significado la agregamos
+        }
+
+        for(letra in actual.seq){ //para cada hijo de esa ult letra
+            if(letra.valido == true && letra.significado != null){ //si tiene significado
+                nuevapalabra = prefijo + letra
+                palabras.concatenar(nuevapalabra) //agregamos la nueva palabra
+                palabras.concatenar(letra.palabrasConPrefijo()) //buscamos nuevas palabras con ese prefijo
+            }
+            if(letra.valido == true && letra.significado == null){ // si es valido pero sin significado == faltan letras para completar la palabra
+                palabras.concatenar(letra.palabrasConPrefijo("")) //agregamos la recursion desde esa nueva letra y con prefijo ""
+            }
+        }
+        return palabras
+    }
+
+15)
+    2. buscar(elem){
+            actual = raiz
+            if(elem.length == 0){
+                return actual.significado
+            }
+            else{
+                
+                nuevapalabra = elem - elem[0] 
+                nuevoTrie = actual.seq[nuevapalabra]
+                nuevoTrie.buscar(nuevapalabra)
+
+            }
+        } 
+
+16.
+    repetidos(matriz){
+        originales = []
+        copias = []
+        for(i = 0; i < matriz.length, i++){
+            if(originales.pertenece(matriz[i])){
+                copias.append(i)
+            }
+            else{
+                originales.append(matriz[i])
+            }
+        }
+    }
+17.
+    //O(lista.length) + O(lista.length * palabra.length)
+    patron(lista, patron){
+        patronesPalabras = []
+        PalabrasARetornar = []
+        for(palabra in lista){ // O(lista.length)
+            patronpalabra = ""
+            for(letra in palabra){ //O(palabra.length)
+                if(esMayuscula(letra)){
+                    patronpalanbra += letra
+                }
+            }
+            patronesPalabras.append((patronpalabra, palabra))
+        }
+
+        for(tupla in patronesPalabras){ //O(lista.length)
+            if(tupla[0] == patron){
+                PalabrasARetornar.append(tupla[1])
+            }
+        }
+    }
+
+19.
+    venderUnListon(tam, cliente, fecha){
+        listonAVender = listones.maximo()
+        listones.borrar(listonAVender)
+        listones.insertar(listonAVender - tam)
+        ObjetoCliente = clientes.buscar(cliente) 
+        ObjetoCliente.compras.append(fecha, tam)
+    }
+
+
+20.
+    class libreria {
+        Trie socios
+        AVL catalogo
+        AVL posicionesLibres
+
+        class socio{
+            int id
+            trie LibrosPoseidos 
+        }
+
+        class libro{
+            int id
+            int posicion
+        }
+
+        AgregarLibroACatalogo(id){
+            catalogo.insertar(id)
+            posicion = posicionesLibres.minimo()
+            posicionesLibres.borrar(posicion)
+            catalogo.
+        }
+
+        PedirLibro(idLibro, nombreSocio){
+            socio = socios.buscar(nombreSocio)
+            socio.LibrosPoseidos.insertar(idLibro)
+            objetoLibro = catalogo.buscar(idLibro)
+            catalogo.borrar(idLibro)
+            posicionesLibres.borrar(objetoLibro.posicion)
+        }
+
+        
+
+
+
+    }
+
+
+
+21.
+    class Agenda{
+        int IdActividad
+        int Dia
+        Hora Inicio
+        Hora Fin
+
+
+    }

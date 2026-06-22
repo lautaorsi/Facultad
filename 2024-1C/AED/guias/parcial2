@@ -1,0 +1,77 @@
+1.
+    a.
+        trie tag con nodos que contienen seq de actividades 
+        avl dias con nodos que contienen int[] horas con la cantidad de actividades que transcurren en ese horario
+        avl actividades con nodos que contienen obs int dia e int horario
+    c.
+        RegistrarActividad(idact, dia, inicio, fin){
+            Dia = dias.buscar(dia) //asumamos que buscar retorna el objeto dia, que va a contener como obs horas
+            int i = inicio
+            while(i<fin){
+                Dia.horas[i] += 1 //incrementamos en 1 la cant de actividades para cada hora en la que transcurra
+            }
+            actividades.agregar(idact) //asumamos que agrega y balancea el avl (O(log n)) 
+            NodoAct = actividades.buscar(idact) //buscamos el nodo O(log n)
+            NodoAct.dia = dia   
+            NodoAct.inicio = inicio    //agregamos los observadores al nodo de la actividad
+            NodoAct.fin = fin
+        }
+
+2.
+    coloquial:
+        invrep:
+            primerParcial y segundoParcial tienen como valor un numero entre 0 y 10
+            alumnos es un conjunto de int
+            aprobados es el conjunto de alumnos tal que primerParcial[alumno] >= 6 y segundoParcial[alumno] >= 6
+        
+        funcabs:
+            para cualquier alumno del dicc calificaciones, la primera componente de la tupla sera primerParcial[alumno] y la segunda segundoParcial[alumno]
+            aprobados sera el conjunto de la var aprobados
+            reprobados seran todos los alumnos con pp < 6 o sp < 6
+            
+
+3.
+    seq de tuplas (id, momento, medida) 
+    con id acotado 
+    con momento y medida no acotado
+    
+    MasContaminados(seq, k){
+        sensores = new trie    
+        seq.mergesort() //O n log n en base a que tan recientes son
+        for(elem in seq){ //O(n)
+            
+            //O(1)
+            sensores.agregar(elem[0]) //agrega el nodo
+            
+            //O(1)
+            objetoSensor = sensores.buscasr(elem[0]) //retorna el objeto dentro del nodo que contiene obs sumaMediciones, obs cantMediciones y obs MedicionMasReciente
+            
+            //O(1)
+            if(objetoSensor.cantMediciones < k){
+                objetoSensor.cantMediciones += 1 
+                objetoSensor.sumaMediciones += elem[2] 
+                if(objetoSensor.MedicionMasReciente == 0){ //se inicializa en 0 y esta guarda solo se cumple en la primera aparicion del sensor (que ya esta ordenado de mas reciente a menos reciente) entonces el primer elem es el mas grande y el unico a guardar
+                    objetoSensor.MedicionMasReciente = elem[1] 
+                }
+            }   
+
+        }
+
+        nuevaseqTupla = []
+
+        for(elem in seq){ //O(n)
+            //O(1)
+            Sensor = sensores.buscar(elem[0])
+            //O(1)
+            nuevaseqTupla.agregar((Sensor.MedicionMasReciente, Sensor.sumaMediciones, elem))
+        }
+
+        //O(n log n)
+        nuevaseqTupla.mergeSort() //en base a la primera componente
+        nuevaseqTupla.mergeSort() //en base a la 2da componente
+        return nuevaseqTupla.soloNombre()
+
+
+
+        
+    }

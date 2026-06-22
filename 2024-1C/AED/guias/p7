@@ -1,0 +1,321 @@
+7.3)
+    esta(elem){
+        if(raiz.valor == elem){
+            return true
+        }
+        if(raiz.izquierdo == null && raiz.derecho == null){
+            return false
+        }
+        else{
+           return false || esta(raiz.izquierdo) || esta(raiz.derecho) 
+        }
+        
+    }
+
+
+7.4)
+    cantAp(elem){
+        if(this.raiz == null){
+            return 0
+        }
+        if(raiz.valor == elem){
+            return 1 + cantAp(raiz.derecho) + cantAp(raiz.izquierdo)
+        }
+        
+    }
+
+7.5)
+    ultimoNivelCompleto(){
+        altura() && cantHijos(2)
+    }
+
+
+
+
+
+8.1)
+    esta(elem){
+        if(raiz == null){
+            return false
+        }
+        if(raiz.valor < elem){
+            if(raiz.derecho == null){
+                return false
+            }
+            else{
+                raiz.derecho.esta(elem)
+            }
+        }
+        if(raiz.valor > elem){
+            if(raiz.izquierdo == null){
+                return false
+            }
+            else{
+                raiz.izquierdp.esta(elem)
+            }
+        }
+        if(raiz.valor == elem){
+            return true
+        }
+    }
+
+8.2)
+    cantAp(elem){
+        if(raiz == null){
+            return 0
+        }
+        if(raiz.valor == elem){
+            return 1 + cantAp(raiz.derecho) + cantAp(raiz.izquierdo)
+        }
+        if(raiz.valor > elem){
+            return cantAp(raiz.izquierdo)
+        }
+        if(raiz.valor < elem){
+            return cantAp(raiz.derecho)
+        }
+    }
+8.3)
+insertar(elem){
+    if(raiz.valor > elem){
+        if(raiz.izquierdo ==null){
+            raiz.izquierdo = new Nodo(elem)
+        }
+        else{
+            insertar(raiz.izquierdo)
+        }
+    }
+    if(raiz.valor < elem){
+        if(raiz.derecho == null){
+            raiz.derecho = new Nodo(elem)
+        }
+        else{
+            insertar(raiz.derecho)
+        }
+    }
+}
+
+11.b)
+    estaLLave(llave){
+        return this.esta(llave)
+    }
+    definir(llave, inter){
+        if(raiz.valor > elem){
+            if(raiz.izquierdo ==null){
+                raiz.izquierdo = new Nodo(elem)
+                raiz.izquierdo.interno = inter
+            }
+            else{
+                insertar(raiz.izquierdo)
+            }
+        }
+        if(raiz.valor < elem){
+            if(raiz.derecho == null){
+                raiz.derecho = new Nodo(elem)
+                raiz.derecho.interno = inter
+            }
+            else{
+                insertar(raiz.derecho)
+            }
+        }
+    }
+    obtener(llave){
+         if(raiz == null){
+            return false
+        }
+        if(raiz.valor < elem){
+            if(raiz.derecho == null){
+                return false
+            }
+            else{
+                raiz.derecho.esta(elem)
+            }
+        }
+        if(raiz.valor > elem){
+            if(raiz.izquierdo == null){
+                return false
+            }
+            else{
+                raiz.izquierdo.esta(elem)
+            }
+        }
+        if(raiz.valor == elem){
+            return raiz.interno
+        }
+    }
+
+    
+
+21.
+    class Agenda {
+        Trie Tags 
+        AVL Actividades
+        AVL Dias
+
+        class tag{
+            str[] actividades
+        }
+
+        class dia{
+            Int[24] horas
+
+            NuevoDia(){
+                horas = [0,0,0,0,....,0] //24 valores en 0
+            }
+            
+            //O(1) pues horas es acot
+            ActividadEnHorario(inicio, fin){
+                for(i = inicio; i < fin; i++){
+                    horas[i] += 1
+                }
+            }
+        }
+
+        class Actividad{
+            int id
+            int dia
+            int inicio
+            int fin
+            NuevaActividad(id1, dia1, inicio1, fin1){
+                this.id = id1
+                this.dia = dia1
+                this.inicio = inicio1
+                this.fin = fin1
+            }
+        }
+
+        //O(log d)
+        RegistrarActividad(id, dia, inicio, fin){
+            //O(1)
+            objetoAct = NuevaActividad(id, dia, inicio, fin)
+            Actividades.insertar(id, objetoAct) // al nodo le agrega el objeto del 2do parametro
+            //O(log d)
+            if(Dias.pertenece(dia)){
+                //O(log d)
+                objetoDia = Dias.buscar(dia)
+            }
+            else{
+                objetoDia = NuevoDia()
+            }
+            //O(1)
+            objetoDia.ActividadEnHorario(inicio, fin)
+        }
+
+        //O(log a)
+        VerActividad(Id){
+            //O(log(a))
+            Objactividad = Actividades.buscar(Id)
+            return Objactividad.dia + Objactividad.inicio + Objactividad.fin
+        }
+
+        //O(1)
+        AgregarTag(idAct, tag){
+            //tags acotados => O(1)
+            objTag = tags.buscar(tag)
+            //O(1)
+            objTag.actividades.append(idAct)
+        }
+
+        //O(log d)
+        HoraMasOcupada(dia){
+            //O(log d)
+            objetoDia = dias.buscar(dia)
+            return max(objetoDia.horas) //horas es acotada => O(1)
+        }
+
+        //O(1)
+        ActividadesPorTag(tag){
+            //O(1)
+            objetoTag = tags.buscar(tag)
+            return objetoTag.actividades
+        }
+
+
+    }
+
+22.
+    class Torneo{
+
+        AVL equipos
+        AVL puntos (utiliza NodoPunto)
+        
+        class NodoPunto{
+            equipos = AVL equiposConPunto
+        }
+
+        nuevoTorneo(){
+            equipos = new AVL()
+        }
+
+        //O(log n)
+        registrarPartido(ganador, perdedor){
+            ObjetoGanador = this.equipos.obtener(ganador) // buscamos equipo O(log n)
+            NodoPuntaje = puntos.buscar(ObjetoGanador.puntos) // buscamos puntaje en puntos O(log n), un punto x cada equipo
+            NodoPuntaje.equipos.eliminar(ganador) //eliminamos al equipo de ese puntaje O(log n)
+            ObjetoGanador.puntos += 1
+            NodoPuntaje = puntos.buscar(ObjetoGanador.puntos) // buscamos puntaje en puntos O(log n)
+            NodoPuntaje.equipos.agregar(ganador) //agregamos el equipo al avl de ese punto O(log n)
+        }
+
+        //O(log n)
+        posicion(equipo){
+            ObjetoEquipo = equipos.obtener(equipo) //O(log n)
+            puntaje = ObjetoEquipo.puntos
+           
+        }
+
+        //O(log n)
+        puntos(equipo){
+            ObjetoEquipo = equipos.obtener(equipo) //O(log n)
+            return ObjetoEquipo.puntos
+        }
+
+        //O(log n)
+        masPuntos(){
+            ObjetoMayorPuntaje = puntos.maximo()
+            return ObjetoMayorPuntaje.equiposConPunto
+        }
+
+    }
+
+
+22.
+    class Torneo{
+
+        AVL equipos = new AVL(clave(equipo),puntos)
+        AVL posiciones = new AVL(clave(puntos), posicion)
+
+        Puntos(equipo){
+            return equipos.buscar(equipo) //O(log n)
+        } //O(LOG N)
+
+
+        RegistrarPartido(ganador, perdedor){
+            PuntosDeEquipo = equipos.buscar(equipo) //O(log n)
+            posicionActual = posiciones.buscar(PuntosDeEquipo) //O(log n) 
+            posicionActual += 1 //mismo que abajo
+            PuntosDeEquipo += 1 //tenemos aliasing pues esto es un pointer y no una copia, entonces se modifica el valor en el nodo
+            if(!posiciones.existe(PuntosDeEquipo)){ //O(log n)
+                posiciones.crear(PuntosDeEquipo, posicionActual -1) //O(log n)
+            }
+        } //O(4 LOG N) = O(LOG N)
+
+
+        Posicion(equipo){
+            PuntosDeEquipo = equipos.buscar(equipo) //O(log n)
+            return posiciones.buscar(PuntosDeEquipo) //O(log n)
+        } //O(2 LOG N) = //O(LOG N)
+
+    }
+
+
+    en mergeSort, dividir es log arr.length
+
+
+16.
+    raroSort(arr){
+        
+    }
+
+
+
+

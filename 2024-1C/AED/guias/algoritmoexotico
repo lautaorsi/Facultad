@@ -1,0 +1,32 @@
+AlgoritmoExotico(A, R){
+    n = long(A) //O(1) 
+    R[0] = (A[0],1) //O(1)
+    r = 0 //O(1)
+    i = 1 //O(1)
+    res = 0 //O(1)
+    while(i < n){ //O(|a|)
+        if(a[i] == R[r].val){ 
+            R[r] = (R[r].val,R[r].reps +1)
+        }
+        else{
+            j = 1
+            while(j<= R[r].reps){ 
+                res = res + R[r].val * j
+                j += 1
+            }
+            r += 1
+            R[r] = (A[i], 1)
+        }
+        i += 1
+    }
+    return res
+}
+
+
+Hasta el primer while la complejidad es la misma (O(n)) pero ahora depende del arreglo que le pasemos.
+
+En el peor caso podemos decir que siempre va a aparecer un elemento distinto (ej, [4,3,1,6,7,9,5,2,0,22,75,645,72677])
+Y por lo tanto el arreglo R va a contener |a| elementos teniendo una complejidad de O(n.n)
+
+En el mejor caso el arreglo A sera de un mismo elemento (ej. [1,1,1,1,1,1,1,1,1,1]) y por lo tanto el arreglo
+R sera de longitud 1 con R[0].rep = |a| y una complejidad de O(n)

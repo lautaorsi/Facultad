@@ -1,0 +1,114 @@
+a.
+    trie socios -> operaciones acotadas O(1) y sus nodos contienen un avl librosEnPosesion 
+    avl posicionesLibres
+    avl librosEnCatalogo
+
+b.
+    AgregarLibroALCatlogo(){
+        agrego al avl el id 
+        busco el minimo del avl posicionesLibres
+        elimino el min(posicionesLibres)
+        entro al nodo del idLibro y modifico su obs ubicacion con ese min(posicionesLibres)
+    }
+
+    PedirLibro(){
+        busco el socio en el trie
+        agrego el id al avl librosEnPosesion
+        busco el nodo en el librosEnCatalogo
+        obtengo la ubicacion en la estanteria
+        elimino el nodo de librosEnCatalogo
+        agrego esa ubicacion a posicionesLibres
+    }
+
+    DevolverLibro(){
+        busco al socio en el trie
+        elimino el id del libro en avl librosEnPosesion
+        agrego el nodo en librosEnCatalogo con su id
+        busco el min(posicionesLibres)
+        agrego esa posicion al nodo
+    }
+
+    prestados(){
+        busco al socio
+        retorno socio.librosEnPosesion
+    }
+
+    UbicacionDeLibro(){
+        busco el id en librosEnCatalogo
+        retorno nodo.posicion
+    }
+
+2.
+    a.
+        invrep:
+            ultimoPrecio debe ser igual a la segunda componente del de fecha mas reciente de la secuencia de tuplas
+            totalPorProducto debe ser la sumatoria de todas las segundas componentes de la secuencia de tuplas 
+            ventas debe contener una secuencia de tuplas de 3 elementos cada una
+        FuncAbs:
+            para cualquier K que exista en el diccionario ventasPorProducto, todas las tuplas de la seq ventas con primera componente igual a k entonces la tupla formada por su segunda y tercera componente pertenecen a ventasPorProducto[k]
+
+
+            
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+3.
+    Recolectar(stock, usos){
+
+        seqAOrdenar = dict(str, (int,int))
+                          --nombre, (usos, stock)
+        
+        --O(h)
+        for(clave in usos){
+            seqAOrdenar[clave][0] = usos[clave] --declaramos y guardamos los usos
+        }
+
+       --O(n)
+        for(i=0;i<stock.length;i++){
+            clave = stock[i][0]
+            seqAOrdenar[clave][1] += stock[i][1] 
+        }
+
+        
+         seqOrdenadaSegunUsos = seqAOrdenar.mergesort(0) --ordena en base a los usos (elem 0 de la tupla)
+         seqOrdenadaCompleta = seqOrdenadaSegunUsos.mergesort(1) --ordena segun el 2do elem de forma estable
+    }
+
+
+
+sorting parcial x;
+3.
+    stock.length = n
+    usos.length = h
+    trie herbs
+    Recolectar(stock, usos){
+        herbs = new trie
+        for(llave in usos){ //accedemos a cada llave de usos O(h)
+            herbs.agregar(llave, usos[llave], 0) //creamos el nodo O(1) por acot, el 2do param se guarda en un obs usos y 3er param obs stock
+        }
+        for(tupla in stock){ //O(n)
+            ObjetoHierba = herbs.buscar(tupla[0]) //O(1)
+            ObjetoHierba.stock += tupla[1]
+        }
+
+        ListaFinal = new ListaEnlazada
+        for(elem in herbs){ //como es acot el trie O(h)
+            ListaFinal.agregarFinal(elem, elem.stock, elem.usos)
+        }
+        ListaFinal.mergesort(1)
+        ListaFinal.mergesort(2)
+    }
+

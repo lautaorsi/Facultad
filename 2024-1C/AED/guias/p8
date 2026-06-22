@@ -1,0 +1,173 @@
+2.
+    merge sort a s'' y merge sort s
+
+3.
+    O(k . n)
+    para k > (log n) pues podemos usar merge sort
+    minimos(k, seq){
+        res = int[k]
+        while(k != 0){
+            minimo = Minimo(seq)
+            res.append(minimo)
+        }
+    }
+
+    Minimo(seq){
+        res = n[0]
+        for(i = 0; i <n.length-1; i++){
+            if(n[i] >= n[i+1]){
+                res = n[i+1]
+            }
+        }
+    }
+    
+4.
+    merge sort, dado que ya tenemos los arreglos ordenados
+
+5.
+    ordenar(seq){
+        for(elem in seq){
+            
+        }
+    }
+
+
+
+8.
+    ordenar(n, m){
+        seq_sin_repes = []
+        //O(n)
+        for(i = 0; i < n.length -1; i++){
+            if(n[i] != n[i+1]){
+                seq_sin_repes.append(n[i])
+            }
+            m.append(seq_sin_repes)
+        }
+        //O(m+n' log m+n')
+        m.mergesort()
+
+        //O(n)
+        cantap = [10]
+        for(i = 0; i<n.length-1;i++){
+            if(n[i] == n[i+1]){
+                cantap[n[i] + 1]
+            }
+        }
+
+        //O(1)
+        for(i = 0; i<10;i++){
+            cantap[i] -= 1
+        }
+
+        //O(n' + m) + O(1)
+        for(i = 0; i < m.length - 1 ; i++){
+            
+        }
+
+
+    }
+
+
+9.
+    ordenaPlanilla(p){
+        mujeres = []
+        countmujeres = [11]
+        hombres = []
+        counthombres= [11]
+        for(i = 0; i<p.length;i++){
+            if(p[i][0] == 'F'){
+                listaActual = mujeres
+                countActual = countmujeres
+            }
+            else{
+                listaActual = hombres
+                countActual = counthombres
+            }
+            countActual[i] += 1
+        }
+
+
+        hombres = counthombres.countsort()
+        mujeres = countmujeres.countsort()
+        mujeres.append(hombres)
+    }
+
+10.
+    //n log n 
+    fullsort(seq){
+        if(seq.length == 1){
+            return seq
+        }
+        else{
+            seq.casiSort()
+            return merge(casiSort(seq) ++ fullSort(seq - seq[0...seq.length/2])) 
+        }
+    }
+
+11.
+    countsort()
+
+12.
+    quimica(seq){
+        for(i = 0 ; i <seq.length ; i++){
+            
+        }
+    }
+
+13.
+    ordenar13(seq){
+        
+        //o(n)
+        for(tupla in seq){
+            tupla[1] = tupla[1].length //O(L)
+        }
+        //O(n.L)
+
+        seq.mergesort(0)
+        seq.mergesort(1)
+    }
+
+
+
+
+14.
+    ordenarMultiplos(arr, k){
+        subseqs = int[arr.length][k]
+
+        //o(n)
+        for(i = 0; i < arr.length; i++){
+            subseqs[i][0] = arr[i]
+        }
+
+        //o(nk)
+        for(sub in subseqs){
+            for(i = 1; i <= k; i++){
+                sub[i-1] = sub[0] * i
+            }
+        }
+        
+
+        while(subseqs.length > 1){
+            merge(subseqs[0], subseqs[1])
+        }
+    }
+    
+15.
+    TieneAgujero(arr){
+        return |arr| == arr.maximo() - arr.minimo() - 1
+    }
+
+
+
+
+6.
+    OrdenarEscalera(arr){
+        copyarr = new seq(tupla(int, int))
+        j = 0
+        for(i = 0; i < arr.length; i++){
+            if(arr[i] + 1 == arr[i+1]){
+                copyarr[j][1] += 1
+            }
+
+        }
+    }
