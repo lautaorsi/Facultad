@@ -1,0 +1,22 @@
+data AT a = Nil | Tri a (AT a) (AT a) (AT a)
+
+1)
+
+
+foldAT :: b -> (a -> b -> b -> b -> b) -> AT a -> b
+foldAT fNil fTri Nil = fNil 
+foldAT fNil fTri (Tri a x y z) = fTri a (foldAT fNil fTri x) (foldAT fNil fTri y) (foldAT fNil fTri z)
+
+preorder :: AT a -> [a]
+preorder = foldAT [] (\nodo t1 t2 t3 -> [nodo] ++ t1 ++ t2 ++ t3) 
+
+mapAT :: (a -> b) -> AT a -> AT b
+mapAT f = foldAT Nil (\nodo t1 t2 t3 -> Tri (f nodo) t1 t2 t3)
+
+nivel :: AT a -> Int -> [a]
+nivel = foldAT [] (\nodo t1 t2 t3 n -> if n == 0 then nodo ++ raiz(t1) ++ raiz(t2) ++ raiz(t3) else n-1 )
+
+raiz :: AT a -> a
+raiz Nil = Nil
+raiz (Tri a t1 t2 t3) = a
+

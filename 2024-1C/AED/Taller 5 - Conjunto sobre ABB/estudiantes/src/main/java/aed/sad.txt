@@ -1,0 +1,89 @@
+  //Si encontramos el nodo
+                if((nodoActual.valor).compareTo(elem) == 0){
+                    //calculamos la cantidad de descendientes y lo dividimos en casos
+                    switch (nodoActual.Cantidaddescendientes()) {
+                        case 0:
+                            //si no tiene descendientes, simplemente lo borramos   
+                                if(nodoActual.padre != null){
+                                    if((nodoActual.padre.valor).compareTo(nodoActual.valor) > 0){
+                                        nodoActual.padre.izquierdo = null;
+                                    }
+                                    else{
+                                        nodoActual.padre.derecho = null;
+                                    }    
+                                }
+                                break;
+
+
+
+                        case 1:
+                            //Como explico arriba, tieneDescendienteIzquierdo retorna true si SOLO tiene desc izq
+                            if(nodoActual.TieneDescendienteIzquierdo()){
+                                //en ese caso, le asignamos el izq del padre al izq del nodo a eliminar
+                                if(nodoActual.padre == null){
+                                    raiz = nodoActual.izquierdo;
+                                }
+                                else{
+                                    if((nodoActual.padre.valor).compareTo(nodoActual.valor) > 0){
+                                        nodoActual.padre.izquierdo = nodoActual.izquierdo;
+                                    }
+                                    else{
+                                        nodoActual.padre.derecho = nodoActual.izquierdo;
+                                    }
+                                }
+                                nodoActual.izquierdo.padre = nodoActual.padre;
+                            }
+                            else{
+                                //en caso de false, sabemos que o tiene 2 elems o tiene derecho, pero el switch ya descarta que tenga 2 elems y por lo tanto solo tiene uno (derecho)
+                                //entonces, le asignamos al derecho del padre el derecho del nodo a elminar
+                                if(nodoActual.padre == null){
+                                    raiz = nodoActual.derecho;
+                                }
+                                else{
+                                    if((nodoActual.padre.valor).compareTo(nodoActual.valor) > 0){
+                                        nodoActual.padre.izquierdo = nodoActual.derecho;
+                                    }
+                                    else{
+                                        nodoActual.padre.derecho = nodoActual.derecho;
+                                    }
+                                }
+                                nodoActual.derecho.padre = nodoActual.padre;
+                                
+                            }
+                            break;
+
+
+
+                        case 2:
+                            Nodo ultimo_nodo = nodoActual.UltimoNodo();
+                            (nodoActual.valor) = (ultimo_nodo).valor;
+                            if(ultimo_nodo.Cantidaddescendientes() == 0){
+                                ultimo_nodo.padre.izquierdo = null;
+                            }  
+                            else{
+                                ultimo_nodo.padre.izquierdo = ultimo_nodo.derecho;
+                            }
+                            break;
+                    }
+
+
+    
+
+                    nodoActual = null;
+                    break;
+                }
+                    //si el valor del nodo actual es mayor:
+                    if((nodoActual.valor).compareTo(elem) > 0){
+                        System.out.println("Mayor");
+                        //recorremos el siguiente nodo mas pequeño
+                        nodoActual = nodoActual.izquierdo;
+                    }
+                    //si el valor del nodo actual es menor
+                    if((nodoActual.valor).compareTo(elem) < 0){
+                        System.out.println("Menor");
+                        //recorremos el siguiente nodo mas grande
+                        nodoActual = nodoActual.derecho;
+                    }
+
+
+              

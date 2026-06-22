@@ -1,0 +1,313 @@
+\documentclass[10pt,a4paper]{article}
+
+\input{AEDmacros}
+\usepackage{caratula} % Version modificada para usar las macros de algo1 de ~> https://github.com/bcardiff/dc-tex
+
+
+\titulo{Trabajo Practico}
+
+\fecha{\today}
+
+\materia{Algoritmos y Estructuras de Datos}
+\grupo{Grupo AlgoTango}
+
+\integrante{Orsi, Lautaro Manuel}{689/23}{Lautaorsi@gmail.com}
+\integrante{Zerbetto De Palma, Gerardo Gabriel}{900/22}{g.zerbetto@gmail.com}
+\integrante{Simoza Sanchez, Valeria Andreina}{1027/22}{vsimoza.vs@gmail.com}
+\integrante{Prieto, Matias}{382/23}{matiasprieto2003@gmail.com}
+% Pongan cuantos integrantes quieran
+
+% Declaramos donde van a estar las figuras
+% No es obligatorio, pero suele ser comodo
+\graphicspath{{../static/}}
+
+\begin{document}
+
+\maketitle
+
+\section{Especificaci\'on}
+\subsection{Redistribucion De Los Frutos}
+
+\begin{proc}{redistribucionDeLosFrutos}{\In recursos : \TLista{\ent}, \In cooperan: \TLista{\bool}}{\TLista{\ent}}
+	\requiere{|recursos| = |cooperan| \land recursosValidos(recursos)}
+	\asegura{|res| = |recursos| \yLuego (\forall i : \ent)(0\le i  < \longitud{recursos} \implicaLuego \Biggl(\biggl((cooperan[i] = true) \implicaLuego res[i] = \\\dfrac{fondoMonetario(recursos,cooperan)}{|recursos|}\biggr) \land \biggl((cooperan[i] = false) \implicaLuego res[i] = recursos[i] + \\\dfrac{fondoMonetario(recursos,cooperan)}{|recursos|})\biggr)\Biggr)}
+    \aux{fondoMonetario}{recursos:\TLista{\float},cooperan:\TLista{\bool}}{\float}{\sum\limits_{j=0}^{|recursos|-1}\Bigl(\IfThenElse{\bigl(cooperan[j]=true\bigr)}{\bigl(recursos[j]\bigr)}{\\ \bigl(0\bigr)}\Bigr)}
+    \pred{recursosValidos}{recursos:\TLista{\float}}{(\forall i : \ent)(0 \leq i < |recursos| \implicaLuego recursos[i] > 0)}
+	\textbf{Desarrollo 1.1}
+	\\
+	Para este ejercicio implementamos un aux \textit{fondoMonetario} que calcula |en base a las listas \textit{cooperan} y \textit{recursos}| una sumatoria de la totalidad de recursos que seran redistribuidos al finalizar el paso temporal, sumando al fondo los recursos de aquellos que cooperen y sin sumar los que no.
+\\ Empleamos este aux para luego calcular el recurso de cada individuo, si este decidia cooperar su recurso sera la division equitativa y si no cooperaba su recurso sera la plata obtenida mas la division equitativa.
+\end{proc}
+
+
+
+
+
+
+
+\subsection{Trayectoria De Los Frutos Individuales a Largo Plazo}
+
+\begin{proc}{trayectoriaDeLosFrutosIndividualesALargoPlazo}{\Inout trayectorias: \TLista{\TLista{\float}}, \In cooperan: \TLista{\bool}, \In apuestas:
+\TLista{\TLista{\float}}, \In pagos: \TLista{\TLista{\float}}, \In eventos: \TLista{\TLista{\nat}}}{}
+	\requiere{trayectoriasValidas(trayectorias) \\ \land mismaLongitud(trayectorias,pagos,apuestas,eventos,cooperan) \\ \land  pagosPositivos(pagos) \\ \land apuestasValidas(apuestas) \\ \land longitugApuestasPagos(apuestas,pagos) \\ \land longitudSublistas(pagos) \\ \land longitudSublistas(apuestas) \\ \land longitudSublistas(eventos) \\ \land longitudEventosApuestas(eventos, apuestas)}
+	\asegura{|trayectorias| = |old(trayectorias)| \land (\forall i : \ent)(0 \leq i < |old(trayectorias)| \implicaLuego (trayectorias[i][0] = (old(trayectorias)[i])[0])\yLuego (\forall j : \ent)(0 \leq j < |eventos[i]| \implicaLuego trayectorias[i][j+1]=calculoDeRecursosSegunCooperacion\\(trayectorias,pagos,apuestas,eventos,cooperan,i,j)))}
+	\aux{calculoDeRecursosSegunCooperacion}{trayectorias,pagos,apuestas:\TLista{\TLista{\float}},eventos:\TLista{\TLista{\nat}},cooperan:\\\TLista{\bool},individuo:\ent,ronda:\ent}{\float}{\IfThenElse{cooperan[individuo] = true}{fondoMonetarioRepartido(trayectorias,pagos,\\apuestas,eventos,cooperan,ronda)}{calculoRecursos(trayectorias[individuo][ronda],\\pagos[individuo][eventos[individuo][ronda]],apuestas[individuo[eventos[individuo][ronda]]])+fondoMonetarioRepartido\\(trayectorias,pagos,apuestas,eventos,cooperan,ronda)}}
+    \aux{calculoRecursos}{recurso,pago,apuesta:\float}{\float}{recurso*pago*apuesta}
+    \aux{fondoMonetario}{trayectorias,pagos,apuestas:\TLista{\TLista{\float},eventos:\TLista{\TLista{\nat},cooperan:\TLista{\bool},ronda:\ent}}}{\float}{\sum\limits_{h=0}^{|cooperan|-1} \IfThenElse{cooperan[h] = true}{calculoRecursos(trayectorias[h][ronda],pagos[h][eventos[h][ronda]],\\apuestas[h][eventos[h][ronda]])}{0}}
+    \aux{fondoMonetarioRepartido}{trayectorias,pagos,apuestas:\TLista{\TLista{\float}},eventos:\TLista{\TLista{\nat}},cooperan:\TLista{\bool},ronda:\ent}{\float}{\dfrac{fondoMonetario(trayectorias,pagos,\\apuestas,eventos,cooperan,ronda)}{|cooperan|}}
+    \aux{sumaApuestas}{apuestas:\TLista{\TLista{\float}}, individuo: \ent}{\float}{\sum\limits_{h=0}^{|apuestas[individuo]|-1} apuestas[individuo][h]}
+    \pred{mismaLongitud}{lista: \TLista{T},pagos,apuestas:\TLista{\TLista{\float}},eventos:\TLista{\TLista{\nat}},cooperan:\TLista{\bool}}{|lista|=|cooperan|=|apuestas|=|pagos|=|eventos|}
+    \pred{trayectoriasValidas}{trayectorias:\TLista{\TLista{\float}}}{|trayectorias| > 0 \land (\forall i: \ent)(0 \leq i < |trayectorias| \implicaLuego |trayectorias[i]| = 1 \yLuego (\forall x:\float)(x \in trayectorias[i] \implicaLuego x > 0))}
+    \pred{pagosPositivos}{pagos:\TLista{\TLista{\float}}}{(\forall i,j:\ent)(0 \leq i < |pagos| \yLuego (0 \leq j < |pagos[i]| \implicaLuego pagos[i][j] > 0))}
+    \pred{apuestasValidas}{apuestas:\TLista{\TLista{\float}}}{(\forall i,j:\ent)(0 \leq i < |apuestas| \implicaLuego sumaApuestas(apuestas,i) = 1 \yLuego (0 \leq j < |apuestas[i]| \implicaLuego 0 < apuestas[i][j] < 1))}
+    \pred{longitudApuestasPagos}{apuestas,pagos:\TLista{\TLista{\float}}}{(\forall i:\ent)(0 \leq i < |apuestas| \implicaLuego |apuestas[i]| = |pagos[i]|)}
+    \pred{longitudSublistas}{lista:\TLista{\TLista{T}}}{(\forall i:\ent)(0 \leq i < |lista| \implicaLuego (|lista[0]| > 0 \yLuego |lista[0]| = |lista[i]|))}
+
+    \pred{longitudEventosApuestas}{eventos:\TLista{\TLista{\nat}},apuestas:\TLista{\TLista{\float}}}{(\forall i,j:\ent)(0 \leq i < |eventos| \yLuego 0 \leq j < |eventos[i]|  \implicaLuego eventos[i][j] < |apuestas[i]|)}
+
+    
+    \textbf{Desarrollo 1.2} \\
+    En este ejercicio actualizamos la trayectoria de cada individuo basandonos en sus recursos y evento correspondiente por ronda (con su respectivo pago y apuesta). Usamos el aux \textit{calculoDeRecursosSegunCooperacion} en el que calculamos los recursos que le quedarán al individuo teniendo en cuenta primeramente si coopera o no. En el primer caso recibe recursos únicamente del fondo monetario distribuido entre el total de los individuos (aux \textit{fondoMonetarioRepartido}) y en el otro caso se calcula su ganancia individual (aux \textit{calculoRecursos}) y se suma el fondo monetario distribuido.
+    
+    \textbf{Aclaración} \\
+    En el pred apuestasValidas definimos por interpretación que las apuestas individuales son mayores a 0 y menores a 1, ya que no encontramos referencias en el tp al rango exacto que deben tener.
+    
+
+
+
+
+\end{proc}
+
+
+
+\subsection{Trayectoria Extraña Escalera}
+
+\begin{proc}{trayectoriaExtrañaEscalera}{\In trayectoria: \TLista{\float}}{\bool}
+	\requiere{|trayectoria| > 0}
+	\asegura{res = true \iff \biggl((|trayectoria| = 1) \lor (|trayectoria| = 2 \land \neg(todosIguales(trayectoria)) \oLuego (|trayectoria| > 2 \land hayUnicoMax(trayectoria))\biggr)}
+	\pred{hayUnicoMax}{trayectoria: \TLista{\float}}{
+	(CantidadMaximos(trayectoria) = 1 \land \neg(UnMaxEnLimite(trayectoria))) \lor (CantidadMaximos(trayectoria) = 0 \land UnMaxEnLimite(trayectoria))}
+    \pred{todosIguales}{lista:\TLista{\float}}{(\forall i,j : \ent)(0 \leq i < |lista| \land 0 \leq j < |lista| \land i \neq j \implicaLuego lista[i] = lista[j])}
+    \pred{UnMaxEnLimite}{Trayectoria:\TLista{\float}}{
+    (lista[0] > lista[1] \land lista[|lista|-1] \leq lista[|lista|-2]) \lor ( lista[0] \leq lista[1] \land lista[|lista| -1] > lista[|lista| -2])
+    }
+    
+	\aux{CantidadMaximos}{lista: \TLista{\float}}{\ent}{\sum\limits_{i =1}^{|lista|-2}\IfThenElse{\biggl(\Bigl(\bigl(lista[i-1] < lista[i]\bigr) \land \bigl(lista[i] > lista[i+1]\bigr)\Bigr)\biggr)}{(1)}{(0)}}
+	
+
+\textbf{Desarrollo 1.3:}
+\\
+En este ejercicio, utilizamos una separacion en 3 distintos casos, 2 de ellos unicos y uno generalizado, es importante notar que la trayectoria que se recibe es una lista que representa los recursos a medida que avanzan las rondas (o pasos temporales).
+\\ El primero, siendo que $|\textit{trayectoria}|$ es 1 (se juega una ronda) sabemos que sera maximo local pues no tiene vecinos
+\\ El segundo, siendo que $|\textit{trayectoria}|$ es 2 y que, si son distintos, trivialmente alguno es mayor que el otro siendo entonces el maximo local
+\\El ultimo y mas general, dada una secuencia de mas de 2 elementos se busca si efectivamente hay algun numero mayor que sus numeros vecinos y que ademas sea el \textbf{unico} con esa propiedad en la secuencia
+\end{proc}
+
+\subsection{Individuo Decide Si Cooperar O No}
+
+\begin{proc}{individuoDecideSiCooperarONo}{\In individuo: \nat, \In recursos: \TLista{\float}, \Inout cooperan: \TLista{\bool}, \In apuestas: \TLista{\TLista{\float}}, \In pagos: \TLista{\float}, \In eventos: \TLista{\TLista{\nat}}}{}
+	\requiere{mismaLongitud(recursos,pagos,apuestas,eventos,cooperan) \\ \land individuo < |eventos| \\ \land pagosPositivos(pagos) \\ \land apuestasValidas(apuestas) \\ \land longitudApuestasPagos(apuestas,pagos) \\ \land longitudSublistas(apuestas) \\ \land longitudSublistas(eventos) \\ \land longitudSublistas(pagos) \\ \land longitudEventosApuestas(eventos, apuestas) }
+	\asegura{(\exists Trayectorias,TrayectoriasNegadas : {\TLista{\TLista{\ent}}}) (\exists CooperanNegada {\TLista{\bool}}) 
+\\ \biggl( \Bigl(ValidarTrayectoria(Trayectorias, cooperan, apuestas, pagos, eventos, recursos)\Bigr)
+ \\ \land \Bigl( \neg(old(cooperan)[individuo]) = cooperanNegada[Individuo] \Bigr) 
+\\ \land (\forall i : \ent) \Bigl( 0 \leq i < |cooperan| \land i \neq Individuo \land cooperan[i] = cooperanNegada[i]  \Bigr)
+\\ \land \Bigl(ValidarTrayectorias(TrayectoriasNegada, cooperanNegada, apuestas, pagos, eventos, recursos)\Bigr)   \biggr) 
+\\ \implicaLuego \biggl( \Bigl( \bigl(Trayectorias[Individuo][|eventos[0]|-1] \geq TrayectoriasNegada[Individuo][|eventos[0]| - 1]\bigr) 
+\\ \land cooperan[Individuo] = old(cooperan[Individuo]) \Bigr) 
+\\ \lor \Bigl(  \bigl(Trayectorias[Individuo][|eventos[0]|-1] < TrayectoriasNegada[Individuo][|eventos[0]| - 1]\bigr) 
+\\ \land cooperan[Individuo] = cooperanNegada[Individuo]     \Bigr)
+  \biggr)}
+
+ \pred{ValidarTrayectoria}{trayectorias: \TLista{\TLista{\float}},cooperan: \TLista{\bool}, apuestas: \TLista{\TLista{\float}}, pagos: \TLista{\float},eventos: \TLista{\TLista{\nat}}, recursos: \TLista{\float}}{(\forall i : \ent)(0 \leq i < |recursos| \implicaLuego (trayectorias[i][0] = recursos[i])\yLuego \\ (\forall j : \ent)(0 \leq j < |eventos[i]| \implicaLuego
+ \\ trayectorias[i][j+1]=calculoDeRecursosSegunCooperacion(trayectorias,pagos,apuestas,eventos,cooperan,i,j)))}
+
+    *preds pagosPositivos, apuestasValidas, longitudApuestasPagos, longitudSublistas, mismaLongitud, longitudEventosApuestas y calculoDeRecursosSegunCooperacion (con sus dependencias) declarados en ejercicio 1.2
+\\
+\textbf{Desarrollo 1.4:}
+\\
+ La dificultad de este ejercicio aparece en no tener la secuencia de trayectorias individuales, viendo que calcularlas llevaria mucha complejidad planteamos un cuantificador y predicamos sobre el, analizando las posibles secuencias \textit{trayectorias y trayectoriasNegada} (siendo esta ultima la que corresponderia al caso de la negacion del booleano de cooperacion del individuo) podemos, utilizando los predicados y auxiliares del ejercicio 1.2 y la lista de recursos verificar que efectivamente estas listas son las que deberiamos obtener si calcularamos las trayectorias al largo plazo. \\ \\
+Para validar esta trayectoria comparamos que las primeras posiciones de la trayectoria correspondan a los recursos (basicamente, que el punto de partida de la trayectoria sea correcta) y luego, verificamos que cada posicion \textit{N} de la lista, sea correspondiente a calcular los recursos \textit{N} rondas para cada individuo, partiendo de la base de la ronda 0 (recursos). Es importante notar, que para el caso \textit{trayectoriasNegada} utilizaremos la lista \textit{cooperanNegada}, pues el calculo dependera de si el individuo coopera o no.
+\\ \\
+Al final, podemos observar que utilizando la comparacion de la ultima posicion de \textit{trayectoria} del individuo (basandonos en la cantidad de eventos) con la ultima posicion de la \textit{trayectoriaNegada} asignamos, segun corresponda el valor original (en el primer caso) y el valor negado en el segundo.-
+
+
+\end{proc}
+
+\subsection{Individuo Actualiza Apuesta}
+
+\begin{proc}{individuoActualizaApuesta}{\In individuo: \nat, \In recursos: \TLista{\float}, \In cooperan: \TLista{\bool}, \Inout apuestas: \TLista{\TLista{\float}}, \In pagos: \TLista{\TLista{\float}}, \In eventos: \TLista{\TLista{\nat}}}{}
+	\requiere{individuo < |recursos| \land pagosPositivos(pagos) \land mismaLongitud(recursos,cooperan,apuestas,pagos,eventos) \\ \land apuestasValidas(apuestas) \land longitudApuestasPagos(apuestas,pagos) \\ \land longitudEventosApuestas(eventos, apuestas) \land longitudSublistas(pagos) \land longitudSublistas(apuestas) \land \\longitudSublistas(eventos)}
+	\asegura{(\forall potencialApuesta: \TLista{\float}) \\ \bigl(esMaximaGanancia(potencialApuesta,recursos[individuo],pagos[individuo],eventos[individuo]) \yLuego
+	\\ apuestaValida(potencialApuesta) \yLuego |potencialApuesta| = |apuestas[individuo]| \bigr) \\ \implicaLuego apuestas[individuo] = potencialApuesta}
+	\pred{esMaximaGanancia}{apuesta: \TLista{\float}, recurso: \float, pago: \TLista{\float}, evento: \TLista{\nat}}{\\(\exists otraApuesta: \TLista{\float})\\(RecursoIndividualFinal(otraApuesta,pago,evento,recurso) > RecursoIndividualFinal(apuesta, pago, evento, \\recurso))}
+	
+\aux{RecursoIndividualFinal}{\In apuesta: \TLista{\float}, \In pago: \TLista{\float}, \In evento: \TLista{\nat}, \In recurso: \float}{\float}{ \\ \Bigl(recurso.\prod_{i=0}^{|evento|-1}\bigl(pago[evento[i]].apuesta[evento[i]]\bigr)\Bigr)}
+
+\pred{apuestaValida}{\In apuesta: \TLista{\float}}{
+\bigl(\sum_{i = 0}^{|apuesta|-1}apuesta[i] \bigr) = 1}
+*pagosPositivos, mismaLongitud, apuestasValidas, longitudEventosApuestas, longitudSublistas y  longitudApuestasPagos definidos en el ejercicio 1.2
+\\
+\textbf{Desarrollo 1.5:}
+\\
+En esta especificacion elegimos predicar acerca del cuantificador sobre las potenciales apuestas que existen para decidir cuales generan una ganancia maxima. El predicado esMaximaGanancia es el que justamente decide si la potencialApuesta es la de mayor ganancia posible y evaluando otraApuesta para verificar que efectivamente no haya ninguna otra que la supere.
+\end{proc}
+
+
+
+
+
+
+
+\section{Demostracion de correctitud}
+
+\begin{proc}{frutoDelTrabajoPuramenteIndividual}{\In recurso : \float, \In apuesta : ⟨ s : \float , c : \float ⟩, \In pago : ⟨ s : \float , c : \float ⟩, \In eventos : \TLista{\bool}, \Out res : \float}{}
+	%    \modifica{parametro1, parametro2,..}
+	\requiere{apuesta _c + apuesta _s = 1 \land pago _c > 0 \land pago _s > 0 \land apuesta _c > 0 \land apuesta _s > 0 \land recurso > 0}
+	\asegura{res = recurso(apuesta _c  pago _c)^{\symbol{35}apariciones(eventos, True)} (apuesta _s pago _s)^{\symbol{35}apariciones(eventos, False)}} 
+\end{proc}
+	Donde \symbol{35}apariciones(eventos, True) es el auxiliar utilizado en la teorica, y \symbol{35}(eventos, True) es su abreviacion
+\begin{lstlisting}
+res := recurso;
+i := 0;
+while (i < |eventos|) do
+	if eventos[i] then
+		res := res * apuesta.c * pago.c;
+	else
+		res := res * apuesta.s * pago.s;
+	endif
+	i := i + 1
+endwhile
+\end{lstlisting}
+Para demostrar que la especificacion es correcta respecto a la implementacion, hay que demostrar la tripla de Hoare del requiere, la implementacion y el asegura. \\ Primero demostramos la correctitud del ciclo. Para esto planteamos: \\
+$
+P _c  \equiv i = 0 \land res = recurso \land apuesta _c + apuesta _s = 1 \land pago _c > 0 \land pago _s > 0 \land apuesta _c > 0 \land apuesta _s > 0 \land recurso > 0 \\
+Q _c  \equiv res = recurso(apuesta _c  pago _c)^{\symbol{35}(eventos, True)} (apuesta _s pago _s)^{\symbol{35}(eventos, False)} \\ 
+I \equiv 0 \leq i \leq |eventos| \yLuego res = recurso(apuesta _c  pago _c)^{\symbol{35}(subseq(eventos, 0, i), True)} (apuesta _s pago _s)^{\symbol{35}(subseq(eventos, 0, i), False)} \\ 
+B \equiv i < |eventos| \\ 
+Fv = |eventos| - i
+$
+\\ \\ Queremos ver que se cumplan: \\
+$
+1) P _c \implica I \\ 2) \{I \land B\}  while....endwhile  \{I\} \\ 3) I \land -B \implica Q _c \\ 4) \{ I \land B \land v _0 = Fv \} while....endwhile \{ Fv < v _0 \} \\ 5)  I  \land Fv \leq 0 \implica -B
+$
+\\ \\
+ %
+%
+%
+1) $P _c \implica I: \\  (i = 0 \land res = recurso \land apuesta _c + apuesta _s = 1 \land pago _c > 0 \land pago _s > 0 \land apuesta _c > 0 \land apuesta _s > 0 \land recurso > 0) \implica (0 \leq i \leq |eventos| \yLuego res = recurso(apuesta _c  pago _c)^{\symbol{35}(subseq(eventos, 0, i), True)} (apuesta _s pago _s)^{\symbol{35}(subseq(eventos, 0, i), False)})\\\\
+$
+Aumo que el antecedente es verdadero. Como i = 0, reemplazo i por 0 \\\\
+$
+(res = recurso \land apuesta _c + apuesta _s = 1 \land pago _c > 0 \land pago _s > 0 \land apuesta _c > 0 \land apuesta _s > 0 \land recurso > 0) \implica\\ (0 \leq 0 \leq |eventos| \yLuego  res = recurso(apuesta _c  pago _c)^{\symbol{35}(subseq(eventos, 0, 0), True)} (apuesta _s pago _s)^{\symbol{35}(subseq(eventos, 0, 0), False)}) \\\\
+ \equiv (res = recurso \land apuesta _c + apuesta _s = 1 \land pago _c > 0 \land pago _s > 0 \land apuesta _c > 0 \land apuesta _s > 0 \land recurso > 0) \implica\\ res = recurso(apuesta _c  pago _c)^{\symbol{35}(⟨⟩, True)} (apuesta _s pago _s)^{\symbol{35}(⟨⟩, False)} \\\\
+ \equiv (res = recurso \land apuesta _c + apuesta _s = 1 \land pago _c > 0 \land pago _s > 0 \land apuesta _c > 0 \land apuesta _s > 0 \land recurso > 0) \implica\\ res = recurso(apuesta _c  pago _c)^0(apuesta _s pago _s)^0 \\ \\
+\equiv (res = recurso \land apuesta _c + apuesta _s = 1 \land pago _c > 0 \land pago _s > 0 \land apuesta _c > 0 \land apuesta _s > 0 \land recurso > 0) \implica res = recurso\\
+$
+\\
+Como siempre es verdadero, se cumple $P _c \implica  I$
+\\ \\
+%
+%
+%
+%
+2) $\{I \land B\}$  while....endwhile  $\{I\}$: Para demostrar esto hay que demostrar $I \land B \implica wp(while...endwhile, I)$\\
+
+wp(while...endwhile, I) $ \equiv$ wp(if...endif, wp(i := i+1, I) $\equiv wp(if...endif, def(i) \yLuego (0 \leq i+1 \leq |eventos| \yLuego \\ res = recurso(apuesta _c  pago _c)^{\symbol{35}(subseq(eventos, 0, i+1), True)} (apuesta _s pago _s)^{\symbol{35}(subseq(eventos, 0, i+1), False)}))$ \\ \\
+$\equiv (def(eventos[i]) \yLuego(eventos[i]=\True \land wp(res := res*apuesta _c*pago _c,  0 \leq i+1 \leq |eventos| \yLuego \\ res = recurso(apuesta _c  pago _c)^{\symbol{35}(subseq(eventos, 0, i+1), True)} (apuesta _s pago _s)^{\symbol{35}(subseq(eventos, 0, i+1), False)})) \lor (eventos[i]=\False \land wp(res := res*apuesta _s*pago _s, 0 \leq i+1 \leq |eventos| \yLuego \\ res = recurso(apuesta _c  pago _c)^{\symbol{35}(subseq(eventos, 0, i+1), True)} (apuesta _s pago _s)^{\symbol{35}(subseq(eventos, 0, i+1), False)})))$ \\ \\
+$
+\equiv 0 \leq i < |eventos| \yLuego (eventos[i]=\True \land  0 \leq i+1 \leq |eventos| \yLuego \\ res = recurso(apuesta _c  pago _c)^{\symbol{35}(subseq(eventos, 0, i+1), True)-1} (apuesta _s pago _s)^{\symbol{35}(subseq(eventos, 0, i+1), False)}) \lor (eventos[i]=\False \land  0 \leq i+1 \leq |eventos| \yLuego  res = recurso(apuesta _c  pago _c)^{\symbol{35}(subseq(eventos, 0, i+1), True)} (apuesta _s pago _s)^{\symbol{35}(subseq(eventos, 0, i+1), False)-1})$ \\ \\
+
+Utilizando la propiedad $P\implica(Q\lor R) \Iff (P\implica Q)\lor(P\implica R)$ vemos los casos de la implicacion original por separado \\ Caso eventos[i]=$\True$:\\
+
+$(0 \leq i \leq |eventos| \yLuego res = recurso(apuesta _c  pago _c)^{\symbol{35}(subseq(eventos, 0, i), True)} (apuesta _s pago _s)^{\symbol{35}(subseq(eventos, 0, i), False)} \land \\ i < |eventos|) \implica (0 \leq i < |eventos| \yLuego (eventos[i]=\True \land  0 \leq i+1 \leq |eventos| \yLuego \\  res = recurso(apuesta _c  pago _c)^{\symbol{35}(subseq(eventos, 0, i+1), True)-1} (apuesta _s pago _s)^{\symbol{35}(subseq(eventos, 0, i+1), False)}))$\\ \\
+
+$\equiv(0 \leq i < |eventos| \yLuego res = recurso(apuesta _c  pago _c)^{\symbol{35}(subseq(eventos, 0, i), True)} (apuesta _s pago _s)^{\symbol{35}(subseq(eventos, 0, i), False)}  \implica 0 \leq i < |eventos| \yLuego (eventos[i]=\True \land  0 \leq i+1 \leq |eventos| \yLuego \\  res = recurso(apuesta _c  pago _c)^{\symbol{35}(subseq(eventos, 0, i+1), True)-1} (apuesta _s pago _s)^{\symbol{35}(subseq(eventos, 0, i+1), False)})$ \\\\
+
+$\equiv(0 \leq i < |eventos| \yLuego res = recurso(apuesta _c  pago _c)^{\symbol{35}(subseq(eventos, 0, i), True)} (apuesta _s pago _s)^{\symbol{35}(subseq(eventos, 0, i), False)}  \implica (eventos[i]=\True \land  0 \leq i+1 \leq |eventos| \yLuego \\  res = recurso(apuesta _c  pago _c)^{\symbol{35}(subseq(eventos, 0, i+1), True)-1} (apuesta _s pago _s)^{\symbol{35}(subseq(eventos, 0, i+1), False)})$ \\\\
+
+Asumo verdadero el antecedente y reemplazo res \\
+$\equiv0 \leq i < |eventos|   \implica (eventos[i]=\True \land  0 \leq i+1 \leq |eventos| \yLuego  \\ recurso(apuesta _c  pago _c)^{\symbol{35}(subseq(eventos, 0, i), True)} (apuesta _s pago _s)^{\symbol{35}(subseq(eventos, 0, i), False)} =\\ recurso(apuesta _c  pago _c)^{\symbol{35}(subseq(eventos, 0, i+1), True)-1} (apuesta _s pago _s)^{\symbol{35}(subseq(eventos, 0, i+1), False)})$\\
+
+Este predicado significa que si el elemento actual es \True, contar las apariciones de \True en eventos hasta el elemento anterior va a dar uno menos, lo cual es verdadero\\\\ Caso eventos[i]=$\False$:\\
+
+$(0 \leq i \leq |eventos| \yLuego res = recurso(apuesta _c  pago _c)^{\symbol{35}(subseq(eventos, 0, i), True)} (apuesta _s pago _s)^{\symbol{35}(subseq(eventos, 0, i), False)} \land \\ i < |eventos|) \implica (0 \leq i < |eventos| \yLuego (eventos[i]=\False \land  0 \leq i+1 \leq |eventos| \yLuego \\  res = recurso(apuesta _c  pago _c)^{\symbol{35}(subseq(eventos, 0, i+1), True)} (apuesta _s pago _s)^{\symbol{35}(subseq(eventos, 0, i+1), False)-1}))$\\ \\
+ Haciendo lo mismo que en el caso anterior: \\
+$\equiv0 \leq i < |eventos|   \implica (eventos[i]=\False \land  0 \leq i+1 \leq |eventos| \yLuego  \\ recurso(apuesta _c  pago _c)^{\symbol{35}(subseq(eventos, 0, i), True)} (apuesta _s pago _s)^{\symbol{35}(subseq(eventos, 0, i), False)} =\\ recurso(apuesta _c  pago _c)^{\symbol{35}(subseq(eventos, 0, i+1), True)} (apuesta _s pago _s)^{\symbol{35}(subseq(eventos, 0, i+1), False)-1})$\\
+
+Este predicado significa que si el elemento actual es \False, contar las apariciones de \False en eventos hasta el elemento anterior va a dar uno menos, lo cual es verdadero\\
+Como ambos casos de la implicacion son verdaderos, la implicacion es verdadera.\\\\
+%
+%
+%
+%
+%
+3) $ I \land -B \implica Q _c$\\ 
+$ 0 \leq i \leq |eventos| \yLuego res = recurso(apuesta _c  pago _c)^{\symbol{35}(subseq(eventos, 0, i), True)} (apuesta _s pago _s)^{\symbol{35}(subseq(eventos, 0, i), False)} \land \\ i \geq |eventos| \implica res = recurso(apuesta _c  pago _c)^{\symbol{35}(eventos, True)} (apuesta _s pago _s)^{\symbol{35}(eventos, False)} $\\
+
+$ \equiv i = |eventos| \yLuego res = recurso(apuesta _c  pago _c)^{\symbol{35}(subseq(eventos, 0, i), True)} (apuesta _s pago _s)^{\symbol{35}(subseq(eventos, 0, i), False)}   \implica \\ res = recurso(apuesta _c  pago _c)^{\symbol{35}(eventos, True)} (apuesta _s pago _s)^{\symbol{35}(eventos, False)} $\\
+
+Asumo verdadero el antecedente y reemplazo i por $|eventos|$\\
+
+$ \equiv  res = recurso(apuesta _c  pago _c)^{\symbol{35}(subseq(eventos, 0, |eventos|), True)} (apuesta _s pago _s)^{\symbol{35}(subseq(eventos, 0, |eventos|), False)}   \implica \\ res = recurso(apuesta _c  pago _c)^{\symbol{35}(eventos, True)} (apuesta _s pago _s)^{\symbol{35}(eventos, False)} $\\
+
+Como $subseq(eventos, 0,|eventos|$) = eventos: \\
+
+$ \equiv  res = recurso(apuesta _c  pago _c)^{\symbol{35}(eventos, True)} (apuesta _s pago _s)^{\symbol{35}(eventos, False)}   \implica \\ res = recurso(apuesta _c  pago _c)^{\symbol{35}(eventos, True)} (apuesta _s pago _s)^{\symbol{35}(eventos, False)} $\\
+
+Ambos lados de la implicacion son iguales, entoces la implicacion es verdadera \\\\
+%
+%
+%
+%
+4) $\{ I \land B \land v _0 = Fv \} while....endwhile \{ Fv < v _0 \}$:\\ Para demostrar esto hay que demostrar: $(I \land B \land v _0 = Fv)\implica wp(while...endwhile, Fv < v _0)$\\
+
+$wp(while...endwhile, |eventos|-i < v _0)  \equiv wp(if...endif, wp(i := i+1, |eventos|-i < v _0) \\ \equiv wp(if...endif, |eventos|-(i+1) < v _0)$\\
+
+$\equiv def(eventos[i]) \yLuego ((eventos[i]=\True \land wp(res := res*apuesta _c*pago _c, |eventos|-(i+1) < v _0)) \lor \\  (eventos[i]=\False \land wp(res := res*apuesta _s*pago _s, |eventos|-(i+1) < v _0)))$\\
+$\equiv  0 \leq i < |eventos| \yLuego (eventos[i]=\True \land |eventos|-(i+1) < v _0) \lor  (eventos[i]=\False \land  |eventos|-(i+1) < v _0)$\\
+$\equiv  0 \leq i < |eventos| \yLuego (eventos[i]=\True \lor  eventos[i]=\False) \land  |eventos|-(i+1) < v _0 \equiv |eventos|-(i+1) < v _0$\\
+
+Volviendo a la equivalencia original: \\
+$(I \land B \land v _0 = Fv)\implica wp(while...endwhile, Fv < v _0)  \equiv (I \land B \land v _0 = |eventos|-i) \implica \\  0 \leq i < |eventos| \yLuego |eventos|-(i+1) < v _0 $\\
+
+Asumo verdadero el antecedente y reemplazo $v _0$ por $ |eventos|-i $\\
+$\equiv (I \land B ) \implica 0 \leq i < |eventos| \yLuego |eventos|-(i+1) < |eventos|-i \equiv (I \land B ) \implica 0 \leq i < |eventos| \yLuego |eventos|-i-1 < |eventos|-i $\\
+
+Como el consecuente es siempre verdadero, la implicacion es verdadera\\\\
+%
+%
+%
+%
+5) $I  \land Fv \leq 0 \implica -B$\\
+
+$ I  \land |eventos| - i \leq 0 \implica i \geq |eventos| \equiv I  \land |eventos| \leq i \implica i \geq |eventos|$\\
+
+La implicacion es siempre verdadera\\\\
+
+
+Con esto queda demostrado, por Teorema del Invariante y Teorema de Terminacion de Ciclo, que vale la siguiente tripla de Hoare:\\
+$\{i=0, res=recurso\}  while....endwhile  \{res = recurso(apuesta _c  pago _c)^{\symbol{35}(eventos, True)} (apuesta _s pago _s)^{\symbol{35}(eventos, False)}\}$\\\\
+
+Solo queda demostrar que $P _c $ cumple:\\
+
+${(apuesta _c + apuesta _s = 1 \land pago _c > 0 \land pago _s > 0 \land apuesta _c > 0 \land apuesta _s > 0 \land recurso > 0)} \implica\\ wp(res:=recurso; i:=0, P _c)$\\
+
+${\equiv(apuesta _c + apuesta _s = 1 \land pago _c > 0 \land pago _s > 0 \land apuesta _c > 0 \land apuesta _s > 0 \land recurso > 0)} \implica\\ wp(res:=recurso; wp(i:=0, res=recurso \land i=0  \land apuesta _c + apuesta _s = 1 \land pago _c > 0 \land pago _s > 0 \land apuesta _c > 0 \land apuesta _s > 0 \land recurso > 0))$\\
+
+${\equiv(apuesta _c + apuesta _s = 1 \land pago _c > 0 \land pago _s > 0 \land apuesta _c > 0 \land apuesta _s > 0 \land recurso > 0)} \implica\\ wp(res:=recurso; res=recurso \land 0=0  \land apuesta _c + apuesta _s = 1 \land pago _c > 0 \land pago _s > 0 \land apuesta _c > 0 \land apuesta _s > 0 \land recurso > 0)$\\
+
+${\equiv(apuesta _c + apuesta _s = 1 \land pago _c > 0 \land pago _s > 0 \land apuesta _c > 0 \land apuesta _s > 0 \land recurso > 0)} \implica\\ recurso=recurso \land 0=0  \land apuesta _c + apuesta _s = 1 \land pago _c > 0 \land pago _s > 0 \land apuesta _c > 0 \land apuesta _s > 0 \land recurso > 0$\\
+
+Como el consecuente es siempre verdadero, la implicacion es verdadera\\
+
+Al demostrar esto queda demostrado que la especificacion es correcta respecto de la implementacion ya que la postcondicion del ciclo es equivalente a la postcondicion
+
+
+
+
+
+
+
+
+
+\end{document}
