@@ -43,11 +43,15 @@ $$p(X|Y) = \frac{p(Y|X)p(X)}{p(Y)}$$
 
 Alguas aclaraciones:
 
--   $ p(X|Y) $ es el _likelihood_ (o probabilidad de verosimilitud)
--   $ p(X) $ es el _prior_ (o probabilidad a priori)
--   $ P(Y)$ es el _marginal likelihood_ (o verosimilitud marginal)
--   $ P(Y|X)$ es el _posterior_ (o probabilidad a posteriori)
+-   $ p(X|Y) $ es el _likelihood_ (o probabilidad de verosimilitud) <br> _**La probabilidad de que ocurra X sabiendo que ocurrió Y**_
+-   $ p(X) $ es el _prior_ (o probabilidad a priori) <br>
+    _**La probabilidad de que ocurra X antes de analizar Y**_
+-   $ P(Y)$ es el _marginal likelihood_ (o verosimilitud marginal) <br>
 
+-   $ P(Y|X)$ es el _posterior_ (o probabilidad a posteriori) <br>
+    _**La probabilidad de que ocurra X despues de analizar Y**_
+-   $ P(X,Y)$ es el _joint likelihood_ (o verosiomilitud conjunta)
+    _**La probabilidad de que ocurran X e Y a la vez**_
 ![alt text](image.png)
 
 
@@ -163,6 +167,14 @@ Entonces reescribiendo el ejemplo optimizado con for loops y Let
                 ( observe ( normal fx 1.0) y )))
         [slope intercept])
 ```
+
+
+
+# Captiulo 3
+
+## 3.2: Evaluating Density
+
+
 # Capitulo 4
 
 ## 4.1: Likelihood Weighting
@@ -180,6 +192,23 @@ Como implementar likelihood weighting
 Como implementar importance sampling corriendo un programa muchas veces
 
 
-### 4.2: Metropolis-Hastings
+## 4.2: Metropolis-Hastings
 
-Son metodos que generan una cadena de Markov de los valores retornados por programas $\text{r(X)}^{1}\text{,...,r(X)}^{\text{S}}$ aceptando o rechazando samples según un algoritmo que 
+Son metodos que generan una cadena de Markov de los valores retornados por programas $\text{r(X)}^{1}\text{,...,r(X)}^{\text{S}}$ aceptando o rechazando samples según un algoritmo
+
+  1. Inicializa un resultado r con una "calidad" W
+  2. En cada paso genera un nuevo resultado r' con una calidad W'
+  3. Compara las calidades y si el nuevo es mejor lo adopta, si es peor le da una oportunidad según que tan malo sea
+  4. Si el nuevo resultado es rechazado se queda con el anterior  
+
+
+### 4.2.1: Single-Site Proposals
+
+Es la idea de no recalcular todas las variables aleatorias para incrementar la probabilidad de aceptación de un nuevo resultado.
+
+  1. Se define una única variable a recalcular
+  2. Copia el resto de variables de la ejecución anterior
+  3. Corre el programa usando las copias y recalculando variable elegida
+  4. Resuelve y decide si se queda con el cambio o descarta
+
+
