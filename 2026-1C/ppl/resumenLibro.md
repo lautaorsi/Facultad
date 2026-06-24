@@ -212,3 +212,14 @@ Es la idea de no recalcular todas las variables aleatorias para incrementar la p
   4. Resuelve y decide si se queda con el cambio o descarta
 
 
+## 4.3 Sequential Monte Carlo
+
+Esta iteración del algoritmo de likelihood weighting busca optimizar la eficiencia con la cual generamos los valores de las variables al azar. 
+
+- El problema: Cuando tenemos muchas variables es poco probable que podamos hacer que todas tengan un buen valor simultáneamente.
+- La proposición: Separar en subconjuntos más pequeños para incrementar la probabilidad de buenos valores simultáneos.
+
+Para esto se introduce la función $\text{PROPOSE(}\text{X}_{\text{n}-1}\text{,y}_{\text{n}})$ que evalúa un programa hasta la expresión observe en la direccion $\text{y}_{n}$ condicionado por los valores sampleados $\text{X}_{n-1}$ y retorna un par $(\text{X}_{n},\text{log} \Lambda_n)$ donde
+
+- $\text{X}_n$ es un diccionario con pares expresión `sample`: valor
+- $\text{log} \Lambda_n$ contiene el likelihood logarítmico = $\text{log p(}\text{Y}_{n} | \text{X}_n)$
