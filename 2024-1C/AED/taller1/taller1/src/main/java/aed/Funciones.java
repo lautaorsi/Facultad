@@ -12,21 +12,11 @@ class Funciones {
 
 
     boolean esPar(int n) {
-        //if n mod 2 = 0 es par
-        if((n % 2 )== 0){
-
-            return true;
-        }
-        return false;
+        return (n % 2 == 0);
     }
 
     boolean esBisiesto(int n) {
-        //if n div 4 y n NOdiv 100 ====> true
-        //O n div 400 ===> true
-        if(((n % 4) == 0 && (n % 100) != 0) || (n % 400 == 0)){
-            return true;
-        }
-        return false;
+        return (((n % 4) == 0 && (n % 100) != 0) || (n % 400 == 0));
     }
 
     int factorialIterativo(int n) {
