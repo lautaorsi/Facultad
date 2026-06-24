@@ -39,7 +39,7 @@ En este contexto α y β son parámetros, x es una variable latente e y es el va
 
 Esta regla nos indica cómo derivar una probabilidad condicional, condicionar nos indica cómo actualizar nuestras creencias.
 
-$$p(X|Y) = \frac{p(Y|X)p(X)}{p(Y)} = \frac{p(X, Y)}{p(Y)} = \frac{p(X, Y)}{\int p(X, Y) \, dX}$$
+$$p(X|Y) = \frac{p(Y|X)p(X)}{p(Y)}$$
 
 Alguas aclaraciones:
 
@@ -47,6 +47,9 @@ Alguas aclaraciones:
 -   $ p(X) $ es el _prior_ (o probabilidad a priori)
 -   $ P(Y)$ es el _marginal likelihood_ (o verosimilitud marginal)
 -   $ P(Y|X)$ es el _posterior_ (o probabilidad a posteriori)
+
+![alt text](image.png)
+
 
 ### Condicionamiento
 
