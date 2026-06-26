@@ -41,7 +41,7 @@ En este contexto α y β son parámetros, x es una variable latente e y es el va
 
 Esta regla nos indica cómo derivar una probabilidad condicional, condicionar nos indica cómo actualizar nuestras creencias.
 
-$$p(X|Y) = \frac{p(Y|X)p(X)}{p(Y)} = \frac{p(X, Y)}{p(Y)} = \frac{p(X, Y)}{\int p(X, Y) \, dX}$$
+$$p(X|Y) = \frac{p(Y|X)p(X)}{p(Y)}$$
 
 Alguas aclaraciones:
 
@@ -54,6 +54,9 @@ Alguas aclaraciones:
     _**La probabilidad de que ocurra X despues de analizar Y**_
 -   $ P(X,Y)$ es el _joint likelihood_ (o verosiomilitud conjunta)
     _**La probabilidad de que ocurran X e Y a la vez**_
+![alt text](image.png)
+
+
 ### Condicionamiento
 
 Condicionar es parametrizar una distribución, recordemos que tenemos **P(X|Y)** _(o la probabilidad de que, dado Y, ocurra X)_, condicionar sería el acto de fijar el valor de Y para obtener una distribución específica de X según el valor fijado de Y.
@@ -209,6 +212,20 @@ Es la idea de no recalcular todas las variables aleatorias para incrementar la p
   2. Copia el resto de variables de la ejecución anterior
   3. Corre el programa usando las copias y recalculando variable elegida
   4. Resuelve y decide si se queda con el cambio o descarta (usando una cuenta llamada _acceptance ratio_)
+
+
+## 4.3 Sequential Monte Carlo
+
+Esta iteración del algoritmo de likelihood weighting busca optimizar la eficiencia con la cual generamos los valores de las variables al azar. 
+
+- El problema: Cuando tenemos muchas variables es poco probable que podamos hacer que todas tengan un buen valor simultáneamente.
+- La proposición: Separar en subconjuntos más pequeños para incrementar la probabilidad de buenos valores simultáneos.
+
+Para esto se introduce la función $\text{PROPOSE(}\text{X}_{\text{n}-1}\text{,y}_{\text{n}})$ que evalúa un programa hasta la expresión observe en la direccion $\text{y}_{n}$ condicionado por los valores sampleados $\text{X}_{n-1}$ y retorna un par $(\text{X}_{n},\text{log} \Lambda_n)$ donde
+
+- $\text{X}_n$ es un diccionario con pares expresión `sample`: valor
+- $\text{log} \Lambda_n$ contiene el likelihood logarítmico = $\text{log p(}\text{Y}_{n} | \text{X}_n)$
+
 
 # Capitulo 5: Recursive Probabilistic Languages
 
