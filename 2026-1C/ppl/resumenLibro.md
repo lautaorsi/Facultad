@@ -265,3 +265,32 @@ Un típico map de cualquier lenguaje, aplica una función f a una lista de maner
           (f (first values))
 ```
 
+# Capitulo 6: Inference Across Messaging Interface
+
+La idea es que el código es ejecutado po un programa determinístico hasta alcanzar una expersión de tipo `sample` u `observe`, en cuyo caso toma control un controlador de inferencia que implementa operaciones probabilísticas y estocásticas.
+
+## 6.1: Explicit separation
+
+Se interactua mediante un protocolo de mensajes, donde el controlador de inferencia le indica al programa si debe continuar, forkearse o frenar.
+
+En el caso de likelihood weighting nunca hay forkeos ni stops, simplemente se corre el programa en su totalidad
+
+Por otro lado, en el caso de Sequential Monte Carlo tenemos mensajes con argumentos para identificar procesos particulares, como ("start", $\sigma$),("fork", $\sigma, \sigma'$,c), ("kill", $\sigma$) en dirección controlado -> programa y ("sample", $\sigma, \alpha$,d), ("observe", $\sigma, \alpha$,d,c) 
+
+
+## 6.2: Addressing Transformation
+
+Necesitamos tener una foma de identificar el punto actual de ejecución, en particular cualquier `sample` y `observe`, es importante notar que, dado que los HOPPLS pueden evaluar una cantidad sin límites de dichas operaciones, nuestra generación de direcciones debe poder crearlas at run time.
+
+
+## 6.3: Continuation-Passing-Style Transformation (CPS Transformation)
+
+La transformación CPS lineariza un computo en una secuencia de pasos computacionales. La idea es básicamente que cada "continuation" representa las expresiones que fueron evaluadas hasta ahora y las expresiones que le faltan para completar el cómputo. 
+
+Estas continuaciones se llaman en cada `sample` y `observe` una o múltiples veces según el caso. 
+
+
+## 6.4: Message Interface Implementation
+
+Se utiliza una arquitectura cliente-servidor entre los programas y el controlador de inferencia.
+
