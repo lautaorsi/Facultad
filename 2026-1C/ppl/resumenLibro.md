@@ -2,13 +2,15 @@
 
 
 
+clase 01: 1
 
+clase 02: 2.1, 2.2, 4.1 
 
-clase 02: 2.1, 2.2.1, 2.2.2, 4.1 
+clase 03: 4.2, 3.2
 
-clase 03: 4.2, 4.2.1, 3.2
+clase 04: 4.3
 
-
+clase 05: 5,6
 
 
 
@@ -206,6 +208,43 @@ Es la idea de no recalcular todas las variables aleatorias para incrementar la p
   1. Se define una única variable a recalcular
   2. Copia el resto de variables de la ejecución anterior
   3. Corre el programa usando las copias y recalculando variable elegida
-  4. Resuelve y decide si se queda con el cambio o descarta
+  4. Resuelve y decide si se queda con el cambio o descarta (usando una cuenta llamada _acceptance ratio_)
 
+# Capitulo 5: Recursive Probabilistic Languages
+
+
+## 5.1: Syntax
+
+| Regla | Descripción |
+| :--- | :--- |
+| **$v$** | Variable _(references value of another expression in the program)_ |
+| **$c$** | Constant value _(number, str, bool, vector...)_ or primitive operation _(+...)_ |
+| **$f$** | Procedure |
+| **$e $** | $c$ \| $v$ \| $f$ <br> \| `(let [v e1] e2)` _(assigns **e1** to **v**, can be accessed in **e2**)_ <br> \| `(if e1 e2 e3)` _(if (**e1**) **e2** else **e3**)_ <br> \| `(f e1 ... en)` _(f(**e1**,...,**en**))_ <br> \| `(c e1 ... en)` _(same as f, but c is primitive function)_ <br> \| `(sample e)` _(returns a sample value from e, which has to be a distribution object)_ <br>\| `(observe e1 e2)` _(e1 has to be a distribution, e2 is the actual value used for conditioning)_|
+| **$q $** | $e$ \| `(defn f [v1 ... vn] e) q` |
+
+
+## 5.3: Examples
+
+### 1.  Rejection-Sampling 
+
+  Este es un ejemplo de recusión particularmente útil a la hora de armar distribuciones subjetivas, lo que se hace es utilizar una distibución conocida y luego aplicar un filtro particular.
+  ```clojure
+    (defn rejection-sample [proposal is-valid?]
+      (let [value ( proposal )]
+        (if (is-valid? value)
+          value
+          (rejection-sample proposal is-valid?))))
+  ```
+
+### 2. Map 
+
+Un típico map de cualquier lenguaje, aplica una función f a una lista de manera recursiva
+```clojure
+  (defn map [f values])
+    (if (empty? values))
+      values
+      (prepend (map f (rest values)))
+          (f (first values))
+```
 
