@@ -12,7 +12,7 @@ clase 04: 4.3
 
 clase 05: 5,6
 
-
+Justin Dunke graphical models
 
 # Capitulo 1: Introducción
 
@@ -294,3 +294,54 @@ Estas continuaciones se llaman en cada `sample` y `observe` una o múltiples vec
 
 Se utiliza una arquitectura cliente-servidor entre los programas y el controlador de inferencia.
 
+
+# Capitulo 7: Inference in Differentiable Models
+
+Este capitulo se centra en un intermedio entre los HOPPL y FOPPL (en particular del sistema Stan). La idea del middle ground es utilizar un lenguaje de alto nivel estáticamente tipado y con variables declaradas en compile time, esto logra que sepamos exactamente que variables el programa va a instanciar pero que su función de densidad asociada se computa dinámicamente at run time.
+
+Una restricción que surje a partir de los métodos de inferencia basados en la gradiente es la imposibilidad de utilizar variables discretas.
+
+## 7.1: Higher-order Probabilistic Programs with Static Support
+
+### 7.1.1: Static Addressing in HOPPL
+
+Los programas Stan no pueden crear variables al azar dinámicamente, podemos ver que significa esto usando una variante de HOPPL idéntica a la original pero con una modificación en la manera de declarar variables aeatorias.
+
+| anterior | nuevo |
+| :----- | :---- |
+| `(sample e)` | `(sample v e)` |
+
+Esto fuerza una única dirección acorde al nombre de la variable y por lo tanto una cantidad finita de variables aleatorias y facilitando la implementación de inferencia.
+
+
+### 7.1.2: Computing Unnormalized Density as a Side Effect
+
+Funcion de potencial energia de un programa
+
+$$ \text{U(X)} = - \text{log}\gamma(X)$$
+
+Esta energia se calcula mediante una traducción de las expresiones estáticamente addressed a una funcion que acepta las variables libres _X_ como inputs y calcula el valor de retorno _v_ y su _potential energy_. 
+
+- Caso `(observe d y)`: disminuimos la _potenial energy_ por LOG-PROB(d,y) y retornamos y.
+
+- Caso `(factor c)`: disminuimos la _potential energy_ por c y no retornamos nada.
+
+
+## 7.2: Hamiltonian Monte Carlo
+
+Es un algoritmo de MCMC (Monte Carlo Markov Chain) que usa el gradiente para construir un kernel de transición. 
+
+
+# 8: Deep Learning 
+
+
+## 8.1: Programs as Deep Generative Models
+
+
+Los programas que definen modelos generativos son idénticos a los anteriores con el detalle de aceptar redes neuronales como funciones primitivas (aunque esto siempre se puede lograr via implementaciones matemáticas).
+
+### 8.3
+
+La parte más importante de los programas que definen modelos generativos: the ability to partially specify the generative model; encoding the parts of the model you do know, and letting model
+learning and generic deep neural network function approximation take
+care of the rest.
