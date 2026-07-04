@@ -345,3 +345,37 @@ Los programas que definen modelos generativos son idénticos a los anteriores co
 La parte más importante de los programas que definen modelos generativos: the ability to partially specify the generative model; encoding the parts of the model you do know, and letting model
 learning and generic deep neural network function approximation take
 care of the rest.
+
+
+
+
+Guide defines how candidate latent executions are proposed
+
+
+
+Reparametrizacion
+---
+
+Distribucion base (ej normal 0 1)
+
+u = normal(0,1)
+
+r = 3 u + 5 -> normal(5, 3)
+
+
+Variational Autoencoders
+---
+
+p(z) -> prior
+
+p_tita(x|z) -> verosimilitud, encoder
+
+q_phi(z|x) -> guía, decoder
+
+
+
+Gradiente 
+---
+Derivada respecto a un parametro
+
+

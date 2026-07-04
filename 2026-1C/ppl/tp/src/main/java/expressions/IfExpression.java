@@ -1,0 +1,28 @@
+package expressions;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import continuations.Ev;
+import continuations.IfK;
+import forms.Form;
+import machine.Machine;
+
+public class IfExpression extends Expression{
+
+    @Override
+    public void evaluate(Machine machine, ArrayList<Form> tail, HashMap environment, ArrayList address ){
+        Form test = tail.get(0);
+        Form then = tail.get(1);
+        Form els = tail.get(2);
+
+        IfK ifK = new IfK(then, els, environment, address);
+
+        ArrayList newAddress = new ArrayList(address);
+        newAddress.add("test");
+        Ev ev = new Ev(test, environment, newAddress);
+
+        machine.pushContinuation(ifK);
+        machine.pushContinuation(ev);
+    }
+}
