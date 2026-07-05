@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
+import distributions.Bernoulli;
 import distributions.Normal;
 
 public class Primitives {
@@ -20,7 +21,19 @@ public class Primitives {
             ((Number) args.get(1)).floatValue()
         ));
         
-        // Add other primitives here...
+        TABLE.put("+", args -> {
+            float sum = 0f;
+            for(Object a : args){
+                if(a instanceof Boolean b){
+                    sum += b ? 1f : 0f;
+                } else {
+                    sum += ((Number) a).floatValue();
+                }
+            }
+            return sum;
+        });
+
+        TABLE.put("bernoulli", args -> new Bernoulli(((Number) args.get(0)).floatValue()));
     }
 
     public static boolean isPrimitive(String name) {

@@ -1,11 +1,16 @@
 package probabilistic_program;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 
 import controllers.Controller;
 import controllers.LW_Controller;
 import controllers.SMC_Controller;
+import controllers.SSMH_Controller;
 import distributions.Distribution;
 import machine.Machine;
 import messages.DoneMessage;
@@ -18,6 +23,7 @@ import utils.Tuple;
 
 public class ProbabilisticProgram {
     
+
 
     public static Tuple<Object, Float> runLWProbabilisticProgram(String program, Random rng){
 
@@ -53,14 +59,6 @@ public class ProbabilisticProgram {
             }
         }
     }
-
-
-
-
-
-
-
-
 
 
     public static ArrayList<Float> runSMCProbabilisticProgram(String program, ArrayList<Random> rngs, int particle_qtty){
@@ -149,6 +147,163 @@ public class ProbabilisticProgram {
     }
 
 
+
+
+    public static ArrayList<Float> runSSMHProbabilisticProgram(String program, Random rng, int steps, int warmup){
+
+        Controller ssmhController = new SSMH_Controller();
+
+        HashMap<Object, Object> cache = new HashMap<>();
+
+        ArrayList<Object> valueXSO = runSingleSSMHExecution(program, rng, null, cache, ssmhController); 
+
+        Object value = valueXSO.get(0);
+
+        HashMap<Object,Object> X = (HashMap<Object,Object>) valueXSO.get(1);
+
+        HashMap<Object,Float> S = (HashMap<Object,Float>) valueXSO.get(2);
+
+        HashMap<Object,Float> O = (HashMap<Object,Float>) valueXSO.get(3);
+
+        ArrayList<Float> chain = new ArrayList<Float>();
+
+        ArrayList<Object> keys = new ArrayList<>(X.keySet());
+
+        for(int i = 0; i < steps+warmup; i++){
+            Object a0 =  keys.get(rng.nextInt(keys.size()));
+        
+            ArrayList value2X2S2O2 = runSingleSSMHExecution(program, rng, a0, X, ssmhController);
+            
+            Object value2 = value2X2S2O2.get(0);
+
+            HashMap<Object,Object> X2 = (HashMap<Object,Object>) value2X2S2O2.get(1);
+
+            HashMap<Object,Float> S2 = (HashMap<Object,Float>) value2X2S2O2.get(2);
+
+            HashMap<Object,Float> O2 = (HashMap<Object,Float>) value2X2S2O2.get(3);
+        
+            if(Math.log(rng.nextDouble()) < mh_log_alpha(X,X2,S,S2,O,O2,a0)){
+                value = value2;
+                X = X2;
+                S = S2;
+                O = O2; 
+            }
+            if( i >= warmup){
+                chain.add(((Number) value).floatValue());; 
+            }
+        }
+        
+        return chain;
+    }
+
+
+
+
+
+
+    private static ArrayList runSingleSSMHExecution(String program, Random rng, Object x0, HashMap<Object, Object> cache, Controller controller){
+        Machine machine = Machine.initial_machine(program, rng);
+        
+        HashMap<Object,Object> X = new HashMap<>();
+        HashMap<Object,Float> S = new HashMap<>();
+        HashMap<Object,Float> O = new HashMap<>();
+
+        
+        while(true){
+            Message message = machine.resume();
+
+            if(message instanceof SampleMessage sampleMessage){
+                
+                Object address = sampleMessage.address();
+                
+                Distribution distribution = sampleMessage.distribution();
+
+               Float x = (address.equals(x0) || !cache.containsKey(address)) ? distribution.sample(rng) : ((Number) cache.get(address)).floatValue();
+            
+                X.put(address, x);
+
+
+
+                S.put(address, controller.calculateLogDensity(distribution, x));
+                
+                machine.pushValue(x);
+            }
+            if(message instanceof ObserveMessage observeMessage){
+
+                Object address = observeMessage.address();
+
+                Distribution distribution = observeMessage.distribution();
+
+                Float observedValue = observeMessage.observed_value();
+
+                O.put(address, controller.calculateLogDensity(distribution, observedValue));
+
+                machine.pushValue(observedValue);
+            }
+            if(message instanceof DoneMessage doneMessage){
+                
+                ArrayList returnList = new ArrayList<>();
+
+                returnList.add(doneMessage.value());
+                returnList.add(X);
+                returnList.add(S);
+                returnList.add(O);
+
+                return returnList;
+            }
+        }
+    }
+
+
+
+    private static double mh_log_alpha(HashMap<Object,Object> X,HashMap<Object,Object> X2, HashMap<Object,Float> S, HashMap<Object,Float> S2, HashMap<Object,Float> O, HashMap<Object,Float> O2, Object a0){
+        Set<Object> fwd = new HashSet<>(X2.keySet());
+        fwd.removeAll(X.keySet());
+        fwd.add(a0);
+
+        Set<Object> rev = new HashSet<>(X.keySet());
+        rev.removeAll(X2.keySet());
+        rev.add(a0);
+
+        double num = 0.0;
+        for(Map.Entry<Object, Float> entry : S2.entrySet()){
+            if(!fwd.contains(entry.getKey())){
+                num += entry.getValue();
+            }
+        }
+        for(float o2 : O2.values()){
+            num += o2;
+        }
+
+        double den = 0.0;
+        for(Map.Entry<Object, Float> entry : S.entrySet()){
+            if(!rev.contains(entry.getKey())){
+                den += entry.getValue();
+            }
+        }
+        for(float o : O.values()){
+            den += o;
+        }
+
+        return (Math.log(X.size()) - Math.log(X2.size())) + (num - den);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     
 
     private static Message advance(Machine machine, Controller controller){
         Message message = machine.resume();
