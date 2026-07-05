@@ -7,7 +7,7 @@ import machine.Machine;
 import messages.Message;
 import messages.ObserveMessage;
 
-public record ObserveK(ArrayList address) implements Continuation {
+public record ObserveK(ArrayList<Object> address) implements Continuation {
     @Override
     public Message executeOn(Machine machine) {
         Float observed_value = (Float) machine.getNextValue();

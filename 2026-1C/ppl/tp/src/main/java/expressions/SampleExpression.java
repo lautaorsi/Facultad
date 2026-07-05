@@ -11,10 +11,10 @@ import machine.Machine;
 public class SampleExpression extends Expression{
 
     @Override
-    public void evaluate(Machine machine, ArrayList<Form> tail, HashMap environment, ArrayList address ){
+    public void evaluate(Machine machine, ArrayList<Form> tail, HashMap<String,Object> environment, ArrayList<Object> address ){
         SampleK sampleK = new SampleK(address);
 
-        ArrayList newAddress = new ArrayList(address);
+        ArrayList<Object> newAddress = new ArrayList<Object>(address);
         newAddress.add("d");
         Ev ev = new Ev(tail.get(0), environment, newAddress);
 

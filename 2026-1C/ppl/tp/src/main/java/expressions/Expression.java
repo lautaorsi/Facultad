@@ -17,5 +17,5 @@ public abstract class Expression{
         return new CallExpression();
     }
 
-    public abstract void evaluate(Machine machine, ArrayList<Form> tail, HashMap environment, ArrayList address);
+    public abstract void evaluate(Machine machine, ArrayList<Form> tail, HashMap<String,Object> environment, ArrayList<Object> address);
 }

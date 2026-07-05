@@ -68,7 +68,7 @@ public class Machine{
             }
         }
 
-        ArrayList emptyAddresses = new ArrayList();
+        ArrayList<Object> emptyAddresses = new ArrayList<Object>();
         Ev mainEv = new Ev(main, genv, emptyAddresses);
 
         return Machine.instantiate_machine(mainEv, genv, rng);
@@ -78,7 +78,7 @@ public class Machine{
 
         ArrayDeque<Continuation> continuationStackCopy = new ArrayDeque<Continuation>(this.continuationStack);
         ArrayDeque<Object> valueStackCopy = new ArrayDeque<Object>(this.valueStack);
-        HashMap environmentCopy = new HashMap<>(this.environment);
+        HashMap<String, Object> environmentCopy = new HashMap<String,Object>(this.environment);
 
         return new Machine(continuationStackCopy, valueStackCopy, environmentCopy, seed, logW);
     }
@@ -113,13 +113,13 @@ public class Machine{
         continuationStack.push(continuation);
     }
 
-    public void push_body(ArrayList<Form> body, HashMap environment, ArrayList address){
+    public void push_body(ArrayList<Form> body, HashMap<String, Object> environment, ArrayList<Object> address){
         ArrayList<Continuation> seq = new ArrayList<>();
 
         Ev ev;
         Discard discard = new Discard();
         for(int i = 0; i < body.size() - 1; i++){
-            ArrayList newAddress = new ArrayList(address);
+            ArrayList<Object> newAddress = new ArrayList<Object>(address);
             newAddress.add("body");
             newAddress.add(i);
             ev = new Ev(body.get(i), environment, newAddress);
@@ -127,7 +127,7 @@ public class Machine{
             seq.add(discard);
         }
 
-        ArrayList newAddress = new ArrayList(address);
+        ArrayList<Object> newAddress = new ArrayList<Object>(address);
         newAddress.add("body");
         newAddress.add(body.size() - 1);
         ev = new Ev(body.get(body.size() - 1), environment, newAddress);

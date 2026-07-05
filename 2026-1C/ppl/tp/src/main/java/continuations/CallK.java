@@ -11,7 +11,7 @@ import messages.Message;
 import utils.Closure;
 import utils.Primitives.Primitive;
 
-public record CallK(int n, ArrayList address) implements Continuation {
+public record CallK(int n, ArrayList<Object> address) implements Continuation {
     @Override
     public Message executeOn(Machine machine) {
 
@@ -25,7 +25,7 @@ public record CallK(int n, ArrayList address) implements Continuation {
         Object f = machine.getNextValue();
 
         if(f instanceof Closure closure){
-            HashMap newEnv = new HashMap(closure.environment());
+            HashMap<String,Object> newEnv = new HashMap<String,Object>(closure.environment());
 
             for(int i = 0; i < closure.parameters().size(); i++){
                 String paramName = ((FormSymbol) closure.parameters().get(i)).text();

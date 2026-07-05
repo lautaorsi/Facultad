@@ -8,14 +8,14 @@ import machine.Machine;
 import messages.ContinueMessage;
 import messages.Message;
 
-public record IfK(Form thenBranch, Form elseBranch, HashMap environment, ArrayList address) implements Continuation {
+public record IfK(Form thenBranch, Form elseBranch, HashMap<String,Object> environment, ArrayList<Object> address) implements Continuation {
     @Override
     public Message executeOn(Machine machine) {
         boolean test = isTruthy(machine.getNextValue());
         Form branch = test ? thenBranch : elseBranch;
         String tag = test ? "then" : "else";
 
-        ArrayList newAddress = new ArrayList(address);
+        ArrayList<Object> newAddress = new ArrayList<Object>(address);
         newAddress.add(tag);
 
         Ev newEv = new Ev(branch, environment, newAddress);

@@ -6,8 +6,6 @@ import java.util.Random;
 
 import org.junit.jupiter.api.Test;
 
-import utils.Tuple;
-
 public class LWTests {
 
     @Test

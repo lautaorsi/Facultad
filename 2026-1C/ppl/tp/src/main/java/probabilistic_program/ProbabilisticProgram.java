@@ -62,7 +62,7 @@ public class ProbabilisticProgram {
 
 
     public static ArrayList<Float> runSMCProbabilisticProgram(String program, ArrayList<Random> rngs, int particle_qtty){
-        ArrayList<Machine> particles = new ArrayList();
+        ArrayList<Machine> particles = new ArrayList<Machine>();
         for(Random rng : rngs){//times particles_qtty
             
             //instantiate particle (machine) w/ specific seed and main environment
@@ -172,7 +172,7 @@ public class ProbabilisticProgram {
         for(int i = 0; i < steps+warmup; i++){
             Object a0 =  keys.get(rng.nextInt(keys.size()));
         
-            ArrayList value2X2S2O2 = runSingleSSMHExecution(program, rng, a0, X, ssmhController);
+            ArrayList<Object> value2X2S2O2 = runSingleSSMHExecution(program, rng, a0, X, ssmhController);
             
             Object value2 = value2X2S2O2.get(0);
 
@@ -201,7 +201,7 @@ public class ProbabilisticProgram {
 
 
 
-    private static ArrayList runSingleSSMHExecution(String program, Random rng, Object x0, HashMap<Object, Object> cache, Controller controller){
+    private static ArrayList<Object> runSingleSSMHExecution(String program, Random rng, Object x0, HashMap<Object, Object> cache, Controller controller){
         Machine machine = Machine.initial_machine(program, rng);
         
         HashMap<Object,Object> X = new HashMap<>();
@@ -242,7 +242,7 @@ public class ProbabilisticProgram {
             }
             if(message instanceof DoneMessage doneMessage){
                 
-                ArrayList returnList = new ArrayList<>();
+                ArrayList<Object> returnList = new ArrayList<>();
 
                 returnList.add(doneMessage.value());
                 returnList.add(X);

@@ -11,12 +11,12 @@ import machine.Machine;
 public class ObserveExpression extends Expression{
 
     @Override
-    public void evaluate(Machine machine, ArrayList<Form> tail, HashMap environment, ArrayList address ){
+    public void evaluate(Machine machine, ArrayList<Form> tail, HashMap<String,Object> environment, ArrayList<Object> address ){
         ObserveK observeK = new ObserveK(address);
 
-        ArrayList newAddressV = new ArrayList(address);
+        ArrayList<Object> newAddressV = new ArrayList<Object>(address);
         newAddressV.add("v");
-        ArrayList newAddressD = new ArrayList(address);
+        ArrayList<Object> newAddressD = new ArrayList<Object>(address);
         newAddressD.add("d");
 
         Ev evV = new Ev(tail.get(1), environment, newAddressV);

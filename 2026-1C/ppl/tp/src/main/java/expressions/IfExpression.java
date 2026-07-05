@@ -11,14 +11,14 @@ import machine.Machine;
 public class IfExpression extends Expression{
 
     @Override
-    public void evaluate(Machine machine, ArrayList<Form> tail, HashMap environment, ArrayList address ){
+    public void evaluate(Machine machine, ArrayList<Form> tail, HashMap<String,Object> environment, ArrayList<Object> address ){
         Form test = tail.get(0);
         Form then = tail.get(1);
         Form els = tail.get(2);
 
         IfK ifK = new IfK(then, els, environment, address);
 
-        ArrayList newAddress = new ArrayList(address);
+        ArrayList<Object> newAddress = new ArrayList<Object>(address);
         newAddress.add("test");
         Ev ev = new Ev(test, environment, newAddress);
 

@@ -11,7 +11,7 @@ import utils.Closure;
 public class FnExpression extends Expression{
 
     @Override
-    public void evaluate(Machine machine, ArrayList<Form> tail, HashMap environment, ArrayList address ){
+    public void evaluate(Machine machine, ArrayList<Form> tail, HashMap<String,Object> environment, ArrayList<Object>address ){
         ArrayList<Form> params = ((FormList) tail.get(0)).elements();
         ArrayList<Form> body = new ArrayList<>(tail.subList(1, tail.size()));
 

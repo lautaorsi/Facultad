@@ -9,13 +9,13 @@ import machine.Machine;
 import messages.ContinueMessage;
 import messages.Message;
 
-public record LetK(ArrayList<Form> binds, int i, ArrayList<Form> body, HashMap environment, ArrayList address) implements Continuation {
+public record LetK(ArrayList<Form> binds, int i, ArrayList<Form> body, HashMap<String,Object> environment, ArrayList<Object> address) implements Continuation {
     @Override
     public Message executeOn(Machine machine) {
         String key = ((FormSymbol) binds.get(2 * i)).text();
 
 
-        HashMap newEnv = new HashMap(environment);
+        HashMap<String,Object> newEnv = new HashMap<String,Object>(environment);
         newEnv.put(key, machine.getNextValue());
         
         
@@ -23,7 +23,7 @@ public record LetK(ArrayList<Form> binds, int i, ArrayList<Form> body, HashMap e
             LetK newLetK = new LetK(binds, i + 1, body, newEnv, address);
             machine.pushContinuation(newLetK);
 
-            ArrayList newAddress = new ArrayList(address);
+            ArrayList<Object> newAddress = new ArrayList<Object>(address);
             newAddress.add("let");
             newAddress.add(2 * (i + 1));
 

@@ -14,7 +14,7 @@ import messages.ContinueMessage;
 import messages.Message;
 import utils.Primitives;
 
-public record Ev(Form expression, HashMap environment, ArrayList address) implements Continuation {
+public record Ev(Form expression, HashMap<String,Object> environment, ArrayList<Object> address) implements Continuation {
     @Override
     public Message executeOn(Machine machine) {
         if(expression instanceof FormSymbol symbol){

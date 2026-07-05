@@ -8,7 +8,7 @@ import messages.Message;
 import messages.SampleMessage;
 
 
-public record SampleK(ArrayList address) implements Continuation {
+public record SampleK(ArrayList<Object> address) implements Continuation {
     @Override
     public Message executeOn(Machine machine) {
         Distribution distribution = (Distribution) machine.getNextValue();
