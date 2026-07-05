@@ -8,6 +8,7 @@ import java.util.function.Function;
 import distributions.Bernoulli;
 import distributions.Normal;
 
+//Credits: Claudio @ Anthropic
 public class Primitives {
 
     public interface Primitive extends Function<List<Object>, Object> {}

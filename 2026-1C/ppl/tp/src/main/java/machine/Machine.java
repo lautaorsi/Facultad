@@ -5,12 +5,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
-import continuations.Continuation;
-import continuations.Discard;
-import continuations.Ev;
 import forms.Form;
 import forms.FormList;
 import forms.FormSymbol;
+import instructions.continuations.Continuation;
+import instructions.continuations.Discard;
+import instructions.continuations.Ev;
 import messages.ContinueMessage;
 import messages.DoneMessage;
 import messages.Message;
@@ -20,12 +20,12 @@ import utils.Parser;
 public class Machine{
 
     private ArrayDeque<Continuation> continuationStack;
-    ArrayDeque<Object> valueStack;
+    private ArrayDeque<Object> valueStack;
     private HashMap<String,Object> environment;
     private Random rng;
     private float logW;
 
-    //INITALIZATION MESSAGES
+
     public Machine(ArrayDeque<Continuation> continuationStack, ArrayDeque<Object> valueStack, HashMap<String,Object> environment, Random rng, float logW){
         this.continuationStack = continuationStack;
         this.valueStack = valueStack;
@@ -33,15 +33,6 @@ public class Machine{
         this.rng = rng;
         this.logW = logW;
         
-    }
-
-    private static Machine instantiate_machine(Continuation mainEv, HashMap<String,Object> environment, Random rng){
-        ArrayDeque<Continuation> continuationStack = new ArrayDeque<Continuation>();
-        continuationStack.add(mainEv);
-
-        ArrayDeque<Object> valueStack = new ArrayDeque<>();
-
-        return new Machine(continuationStack, valueStack, environment, rng, 0.0f);
     }
 
     public static Machine initial_machine(String program, Random rng){
@@ -71,11 +62,15 @@ public class Machine{
         ArrayList<Object> emptyAddresses = new ArrayList<Object>();
         Ev mainEv = new Ev(main, genv, emptyAddresses);
 
-        return Machine.instantiate_machine(mainEv, genv, rng);
+        ArrayDeque<Continuation> continuationStack = new ArrayDeque<Continuation>();
+        continuationStack.add(mainEv);
+
+        ArrayDeque<Object> valueStack = new ArrayDeque<>();
+
+        return new Machine(continuationStack, valueStack, genv, rng, 0.0f);
     }
 
     public Machine fork(Random seed){
-
         ArrayDeque<Continuation> continuationStackCopy = new ArrayDeque<Continuation>(this.continuationStack);
         ArrayDeque<Object> valueStackCopy = new ArrayDeque<Object>(this.valueStack);
         HashMap<String, Object> environmentCopy = new HashMap<String,Object>(this.environment);
@@ -84,7 +79,7 @@ public class Machine{
     }
 
 
-    //GETTERS
+
     public Object getNextValue(){
         return valueStack.pop();
     }
@@ -99,7 +94,6 @@ public class Machine{
 
 
 
-    //"SETTERS" (Kind of, also includes updaters)
 
     public void increaseLogW(float value){
         this.logW += value;

@@ -1,0 +1,34 @@
+package instructions.expressions;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import forms.Form;
+import forms.FormList;
+import instructions.continuations.Ev;
+import instructions.continuations.LetK;
+import machine.Machine;
+
+public class LetExpression extends Expression{
+
+    @Override
+    public void evaluate(Machine machine, ArrayList<Form> tail, HashMap<String,Object> environment, ArrayList<Object> address ){
+        ArrayList<Form> binds = ((FormList) tail.get(0)).elements();
+        ArrayList<Form> body = new ArrayList<>(tail.subList(1, tail.size()));
+
+        if(!binds.isEmpty()){
+            LetK letK = new LetK(binds, 0, body, environment, address);
+
+            ArrayList<Object> newAddress = new ArrayList<Object>(address);
+            newAddress.add("let");
+            newAddress.add(0);
+            Ev ev = new Ev(binds.get(1), environment, newAddress);
+
+            machine.pushContinuation(letK);
+            machine.pushContinuation(ev);
+        }
+        else{
+            machine.push_body(body, environment, address);
+        }
+    }
+}

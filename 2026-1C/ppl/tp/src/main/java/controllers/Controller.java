@@ -8,7 +8,7 @@ import machine.Machine;
 
 
 
-public abstract class Controller{ //Clase abstracta
+public abstract class Controller{
 
     String program;
     Random seed;
@@ -18,7 +18,7 @@ public abstract class Controller{ //Clase abstracta
         machine.pushValue(value);
     }
 
-    public float sampleFrom(Distribution d, Random rng){
+    public float sampleFrom(Distribution d, Random rng){    
         return d.sample(rng);
     }
 
@@ -26,7 +26,7 @@ public abstract class Controller{ //Clase abstracta
         return d.logProb(y);
     }
 
-    
+    //Note: The controller does not perfom the stochastic sampling but rather sends the message to the Distribution to do so, might not be great in terms of design but is pretty declarative IMO
 }
 
 
