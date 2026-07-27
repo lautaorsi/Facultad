@@ -3,9 +3,10 @@
 
 
 > ## Index
-> 1. [Layered Models](#1-layered-models)
->    * [TCP/IP](#12-tcpip)
-
+> 1. [Network Stack](#1-layered-models)
+>     * [Layered Model](#12-tcpip)
+> 2. [Cryptology](#2-cryptology)
+>     * [Four elements of Securing Communications](#22-four-elements-of-securing-communications)
 ---
 
 
@@ -34,4 +35,17 @@ Computer networks are complex systems containing modular layers
 - **Application Layer:**
   > Group of applications requiring network communication
 
+
+# 2. Cryptology
+
+### 2.2. Four elements of Securing Communications
+
+- **Data Integrity:**
+  > Guarantees that the message was not altered
+- **Origin Authenticity:**
+  > Guarantees that the message is not a forgery
+- **Data Confidentiality:**
+  > Guarantees only the authorized user can access it
+- **Data Non-Repudiation:**
+  > Guarantees that the sender cannot refute the validity of the message
 
