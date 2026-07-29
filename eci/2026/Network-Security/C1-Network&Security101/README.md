@@ -49,3 +49,33 @@ Computer networks are complex systems containing modular layers
 - **Data Non-Repudiation:**
   > Guarantees that the sender cannot refute the validity of the message
 
+
+
+### 2.3. Assymetric Encryption Algorithms
+
+
+Diffie-Hellman Algorithm <br>
+Exchange is a secret key exchange protocol over an insecure communication channel
+
+
+
+### 2.4. Hash Guessing
+
+Given a $k$-long combination of $n$ alphabet characters 
+
+Brute Force: 
+Trying all possible combinations of characters with k length.
+
+$ P = n^k$
+
+Dictionary: 
+
+Smallest set of candidates (passwords that "make sense")
+Derived from the language
+Somebody else used them as password
+
+
+Rule Based:
+
+Generate passwords based on some pattern
+regexx, grammar, Markov
