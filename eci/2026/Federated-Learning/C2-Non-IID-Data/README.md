@@ -18,29 +18,47 @@ Calculating a weighted sum divided by how much data it produced
 
 
 
-**Heterogeneity** 
 
-Diffenreces in data, models, resources, or participation. Not necessarily distributional
+> **Heterogeneity** <br> Having differences in data, models, resources, or participation. Not necessarily distributional
 
-## Skewdeness types
+## Skew types
 
-### Data skew
+### 1. Data skew
 
 Having too big of a spread on the amount of data collected by each label
 
-### Label skew 
+### 2. Label skew 
 
 Different labels between models, non convergence is pretty much guaranteed unless there is some big intersection
 
+### 3. Attribute Skew
+
+-   **Distribution based**
+    -   Same aatributes, different distributions 
+-   **Partial attribute selection**
+    -   Clients observe an incomplete usbset of attributes for their samples
+-  **Noisy attributes**
+    -   Attribute values are corrupted or noisy for some clients
+-   **Vertical skew**
+    -   Different clinets hold different attribute subsets for the same samples (vertical FL)
+
+### 4. Participation Skew
+
+It reflects how often and under what conditions clients take part in training or evaluation.
+
+Two forms:
+-   **Party selection and subsampling.** Strategic or random selection of a subset of clients each round.
+-   **Client dropout.** Clients unexepectedly disconnect mid-round because of network issues, batery or other constraints.
 
 
-FedProx
----
-Given a client $k$ at round $t$
+### 5. Modality skew
 
-Add a penalty for wandering, 
-
-$$\min_{w}{F_k(w)}$$
-$$min_{w}{h_{k}(w:w^{t}) = F_{k}(w) + \frac{\mu}{2} ||w-w^{t}||^2}$$
+Clients hold data from sutrcturally different input modalities
 
 
+
+
+
+
+
+FedAvg was derived under IID data 
