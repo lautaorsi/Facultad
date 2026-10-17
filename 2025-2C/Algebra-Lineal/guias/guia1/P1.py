@@ -1,9 +1,8 @@
 import numpy as np
 
+A = np.array([[1,2,3,4],[1,2,3,4]])
 
+print(A[:,1])
 
-      
-# V e c t o r e s
-v = np.array([1,2,3,-1])
-
-print(v)
+print(A.shape) #2x4
+print(A.ndim) #4

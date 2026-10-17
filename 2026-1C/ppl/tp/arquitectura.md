@@ -1,5 +1,16 @@
 ```mermaid
 classDiagram
+
+
+    class Probabilistic_program{
+        +runLWProbabilisticProgram(String program, Random rng) : Tuple~Object,Float~
+        +runSMCProbabilisticProgram(String program, ArrayList~Random~ rngs, int particle_qtty) : ArrayList~Float~
+        +runSSMHProbabilisticPogram(String program, Random rng, int steps, int warmup) : ArrayList~Float~
+    }
+
+
+
+
     class Continuation {
         <<interface>>
         +executeOn(Machine) Message
@@ -66,7 +77,7 @@ classDiagram
         +increaseLogW(value : float) void
         +pushValue(value : Object) void
         +pushContinuation(continuation : Continuation) void
-        +push_body( body : ArrayList<Form>, environment : HashMap<String, Object>, address : ArrayList<Object> ) Message
+        +push_body( body : ArrayList~Form~, environment : HashMap~String, Object~, address : ArrayList~Object~ ) Message
         +resume() : Message
 
     }
@@ -88,14 +99,14 @@ classDiagram
         -machine : Machine
         -rng : Random
 
-        +runInference() : Tuple<Object,Float>
+        +runInference() : Tuple~Object,Float~
     }
     class SMC_Controller{
-        -particles : ArrayList<Machine>
+        -particles : ArrayList~Machine~
         -particle_qtty : Int
         -rngs : Random
 
-        +runInference() : ArrayList<Float>
+        +runInference() : ArrayList~Float~
         -advance(machine : Machine) : Message
     }
     class SSMH_Controller{
@@ -104,13 +115,18 @@ classDiagram
         -steps: Int
         -warmup : Int
 
-        +runInference() : ArrayList<Float>
-        -runSingleExecution(program : String, rng : Random, x0 : Object, cache : Hashmap<Object,Object>) : ArrayList<Object>
-        -mh_log_acceptance_ratio( trace : HashMap<Object,Object>, traceProposal : HashMap<Object,Object>,  sampleLogProbs : HashMap<Object,Float>,  proposedSampleLogProbs : HashMap<Object,Float>,  observeLogProbs : HashMap<Object,Float>,  proposedObserveLogProbs : HashMap<Object,Float>, a0 : Object) : Double
+        +runInference() : ArrayList~Float~
+        -runSingleExecution(program : String, rng : Random, x0 : Object, cache : Hashmap~Object,Object~) : ArrayList~Object~
+        -mh_log_acceptance_ratio( trace : HashMap~Object,Object~, traceProposal : HashMap~Object,Object~,  sampleLogProbs : HashMap~Object,Float~,  proposedSampleLogProbs : HashMap~Object,Float~,  observeLogProbs : HashMap~Object,Float~,  proposedObserveLogProbs : HashMap~Object,Float~, a0 : Object) : Double
     }
     Controller <|-- LW_Controller
     Controller <|-- SMC_Controller
     Controller <|-- SSMH_Controller
     Controller --> Machine
+
+
+
+    Machine <|-- Probabilistic_program
+    Controller <|-- Probabilistic_program
 
 ```
